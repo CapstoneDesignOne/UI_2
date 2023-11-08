@@ -40,6 +40,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  cupertino_icons: ^1.0.2
+  camera: ^0.10.5+5
+  path_provider: ^2.1.1
+  path: ^1.8.3
+  google_mlkit_pose_detection: ^0.9.0
+  video_player: ^2.7.2
+  audioplayers: ^5.2.0
+  vector_math: ^2.1.4
+  image_picker: ^1.0.4
+
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -57,6 +67,8 @@ flutter:
     - assets/chellen/custom_button.png
     - assets/chellen/ranking_button.png
     - assets/chellen/recomand_button.png
+    - assets/chellen/chellen_button.png
+    - assets/chellen/posepra_button.png
     - assets/login/Lotus.png
     - assets/login/Yoga (1).png
     - assets/profile_picture.png
@@ -75,7 +87,10 @@ flutter:
     - assets/p_button/p_button13.png
     - assets/p_button/p_button14.png
     - assets/p_button/p_button15.png
-    - assets/pose/p_button_pose_1.png
+    - assets/pose/downdog_example.png
+    - assets/yogacalender/beginner_button.png
+    - assets/yogacalender/master_button.png
+    - assets/yogacalender/senior_button.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
