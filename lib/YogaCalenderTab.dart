@@ -50,7 +50,7 @@ class DownDog extends StatelessWidget {
               children: [
                 Container(
                   child: Image(
-                    image: AssetImage('assets/pose/downdog_example.png'),
+                    image: AssetImage('assets/pose/p_button_1.png'),
                   ),
                 ),
                 IconButton(iconSize:50,onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => PoseDetectorView()),);}, icon: Icon(Icons.camera)),

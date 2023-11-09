@@ -23,8 +23,8 @@ class _PlayYogaTabState extends State<PlayYogaTab> {
     switch(practice) {
       case 1 :// 챌린져스 버튼을 누르면 화면이 바뀌면서 추천루틴,커스텀이 뜬다.
         return posetab(changeView);
-      case 2: //  추천루틴을 누르면 downdog로간다.
-        return DownDog(changeView);
+      case 2: //  추천루틴을 누르면 추천루틴 선택 페이지로간다.
+        return rutinChoice(changeView);
 
       default : return ChoicePlayMode(changeView);
     }
@@ -143,60 +143,55 @@ class ChoicePlayMode extends StatelessWidget {
   }
 }
 
-class DownDog extends StatelessWidget {
+class rutinChoice extends StatelessWidget {
   final changeViews;
-  const DownDog(this.changeViews,{super.key});
+  const rutinChoice(this.changeViews,{super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(iconSize:45,onPressed: (){changeViews(1);}, icon: Icon(Icons.backspace_outlined)),
-          ],
-        ),
-        Expanded(
-          child: Column(
+    return Container(
+      color: Color(0xFFC8FCC3),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                child: Image(
-                  image: AssetImage('assets/pose/downdog_example.png'),
-                ),
-              ),
-              IconButton(iconSize:50,onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => PoseDetectorView()),);}, icon: Icon(Icons.camera)),
-              Container(
-                width: 250,
-                height: 200,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child : Text("설명설명설명설명설명설명"
-                      "설명설명설명설명설명dd설명"
-                      "설명설명설명설명설명설명설명설명"
-                      "설명설명설명설명설명설명설명설명설명설명설명설명"
-
-                      "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                      "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                      "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                      "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명""설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명""설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명""설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                      "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                      "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                      "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                      "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-
-
-
-
-
-                      ),
-
-                ),
-              )
+              IconButton(iconSize:45,onPressed: (){changeViews(1);}, icon: Icon(Icons.backspace_outlined)),
             ],
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Image.asset(
+                    'assets/chellen/ch_title.png',
+                    fit: BoxFit.fill, // 이미지를 확장하여 채우도록 설정
+                    height: 200, // 원하는 높이로 조절
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    // 첫 번째 버튼 클릭 시 실행할 동작
+                  },
+                  child: Image.asset('assets/chellen/level1.png'),
+                ),
+                InkWell(
+                  onTap: () {
+                    // 두 번째 버튼 클릭 시 실행할 동작
+                  },
+                  child: Image.asset('assets/chellen/level2.png'),
+                ),
+                InkWell(
+                  onTap: () {
+                    // 세 번째 버튼 클릭 시 실행할 동작
+                  },
+                  child: Image.asset('assets/chellen/level3.png'),
+                ),
+              ],
+            ),
           )
-        )
-      ],
+        ],
+      )
     );
   }
 }
