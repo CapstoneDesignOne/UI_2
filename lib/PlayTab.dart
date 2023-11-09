@@ -17,14 +17,15 @@ class _PlayYogaTabState extends State<PlayYogaTab> {
       practice = num;
     });
   }
-// 첼린져스 버튼 해결해보기
+// 추천루틴누르면 루틴 뜨는 화면 만들기
   @override
   Widget build(BuildContext context) {
     switch(practice) {
-      case 1 :// 챌린져스 버튼을 누르면 화면이 바뀌면서 검은 손버튼이 나타난다.
+      case 1 :// 챌린져스 버튼을 누르면 화면이 바뀌면서 추천루틴,커스텀이 뜬다.
         return posetab(changeView);
-      case 2: //  검은손 버튼을 누르면 downdog로간다.
+      case 2: //  추천루틴을 누르면 downdog로간다.
         return DownDog(changeView);
+
       default : return ChoicePlayMode(changeView);
     }
   }
@@ -32,7 +33,7 @@ class _PlayYogaTabState extends State<PlayYogaTab> {
 
 //탭내 페이지 변환
 class posetab extends StatelessWidget {
-  final changeView;
+  final changeView; // practice = num
   const posetab(this.changeView,{super.key});
 
   @override
@@ -48,7 +49,7 @@ class posetab extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                  iconSize:20,
+                  iconSize:20, //practice = 0으로 바뀐다.
                   onPressed: (){changeView(0);},  // 버튼 눌면 첫 탭화면으로 간다.
                   icon: Icon(Icons.backspace_outlined))
             ],
@@ -84,7 +85,7 @@ class posetab extends StatelessWidget {
     );
   }
 }
- //추천루틴, 자세연습 버튼 -> 챌린져스 버튼으로 바꾸기
+
 class ChoicePlayMode extends StatelessWidget {
   final changeView;
   const ChoicePlayMode(this.changeView,{super.key});
@@ -106,7 +107,7 @@ class ChoicePlayMode extends StatelessWidget {
             flex: 1, // 첫 번째 Expanded 위젯
             child: InkWell(
               onTap: (){
-                changeView(1);
+                changeView(1); // posetab으로 이동
               },
               child: Image.asset(
                 'assets/chellen/chellen_button.png',

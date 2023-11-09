@@ -65,7 +65,6 @@ flutter:
   assets:
     - assets/
     - assets/chellen/custom_button.png
-    - assets/chellen/ranking_button.png
     - assets/chellen/recomand_button.png
     - assets/chellen/chellen_button.png
     - assets/chellen/posepra_button.png
