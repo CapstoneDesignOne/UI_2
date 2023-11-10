@@ -1,3 +1,5 @@
+import 'dart:math';
+import 'package:cabston/exp_yoga_ch.dart';
 import 'package:flutter/material.dart';
 import 'package:cabston/pose_detection/pose_detector_view.dart';
 
@@ -25,7 +27,8 @@ class _PlayYogaTabState extends State<PlayYogaTab> {
         return posetab(changeView);
       case 2: //  추천루틴을 누르면 추천루틴 선택 페이지로간다.
         return rutinChoice(changeView);
-
+      case 3:
+        return exp_yoga_ch(changeView);
       default : return ChoicePlayMode(changeView);
     }
   }
@@ -149,50 +152,57 @@ class rutinChoice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color(0xFFC8FCC3),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(iconSize:45,onPressed: (){changeViews(1);}, icon: Icon(Icons.backspace_outlined)),
-            ],
-          ),
-          Expanded(
-            child: Column(
+    return SingleChildScrollView(
+      child: Container(
+        color: Color(0xFFC8FCC3),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Expanded(
-                  child: Image.asset(
-                    'assets/chellen/ch_title.png',
-                    fit: BoxFit.fill, // 이미지를 확장하여 채우도록 설정
-                    height: 200, // 원하는 높이로 조절
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    // 첫 번째 버튼 클릭 시 실행할 동작
+                IconButton(
+                  iconSize: 25,
+                  onPressed: () {
+                    changeViews(1);
                   },
-                  child: Image.asset('assets/chellen/level1.png'),
-                ),
-                InkWell(
-                  onTap: () {
-                    // 두 번째 버튼 클릭 시 실행할 동작
-                  },
-                  child: Image.asset('assets/chellen/level2.png'),
-                ),
-                InkWell(
-                  onTap: () {
-                    // 세 번째 버튼 클릭 시 실행할 동작
-                  },
-                  child: Image.asset('assets/chellen/level3.png'),
+                  icon: Icon(Icons.backspace_outlined),
                 ),
               ],
             ),
-          )
-        ],
-      )
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/chellen/ch_title.png',
+                  ),
+                    // Adjust the margin as needed
+                  InkWell(
+                    onTap: () {
+                      changeViews(3);
+                    },
+                    child: Image.asset('assets/chellen/level1.png'),
+                  ),
+                  SizedBox(height: 30,),
+                  InkWell(
+                    onTap: () {
+                      // Your onTap logic
+                    },
+                    child: Image.asset('assets/chellen/level2.png'),
+                  ),
+                  SizedBox(height: 30,),
+                  InkWell(
+                    onTap: () {
+                      // Your onTap logic
+                    },
+                    child: Image.asset('assets/chellen/level3.png'),
+                  ),
+                  SizedBox(height: 50,),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
-

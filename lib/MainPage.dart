@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:cabston/PlayTab.dart';
 import 'package:cabston/RecordTab.dart';
 import 'package:cabston/YogaCalenderTab.dart';
+import 'package:cabston/exp_yoga_ch.dart';
 
 
 class TabPage extends StatefulWidget {
@@ -23,30 +24,28 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin  
   );
 
   @override /* APPbar 상단 문구 정리*/
-
-
   void initState() {
     _tabController = TabController(
       length: 3,
       vsync: this,
     );
-    _updateAppBarTitle(); // 초기 App Bar 문구 설정
+   // _updateAppBarTitle(); // 초기 App Bar 문구 설정
     _tabController.addListener(_handleTabSelection); // 탭 변경 시 호출할 콜백 함수 등록
     super.initState();
   }
 
-  void _updateAppBarTitle() {
+ /* void _updateAppBarTitle() {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy년 MM월 dd일').format(now);
     setState(() {
       appBarTitle = formattedDate;
     });
-  }
+  }*/
 
   void _handleTabSelection() {
     if (_tabController.index == 0) {
       setState(() {
-        appBarTitle = '요가를 차근차근 배워봐요!';
+        appBarTitle = '요가를 차근차근 \n 배워봐요!';
       });
 
     } else if (_tabController.index == 1) {
@@ -131,13 +130,16 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin  
             ),
           ),
           Expanded(
-            child: TabBarView(
+            child: Container(
+              color: Color(0xFFC8FCC3), // 원하는 배경 색상으로 변경
+              child: TabBarView(
                 controller: _tabController,
                 children: [
-                  YogaCalenderTab(), //커리큐렴
+                  YogaCalenderTab(), //커리큐럼
                   RecordTab(),// 랭킹
                   PlayYogaTab(),//모드선택
-                ]
+                ],
+              ),
             ),
           ),
         ],
@@ -150,7 +152,7 @@ class customTab extends StatelessWidget {
 
   const customTab(this.tabName,{super.key});
   final String tabName;
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
