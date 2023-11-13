@@ -49,6 +49,8 @@ dev_dependencies:
   audioplayers: ^5.2.0
   vector_math: ^2.1.4
   image_picker: ^1.0.4
+  porcupine_flutter: ^2.2.2
+  rhino_flutter: ^3.0.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -108,6 +110,11 @@ flutter:
     - assets/pose/p_button_13.png
     - assets/pose/p_button_14.png
     - assets/pose/p_button_15.png
+    - assets/voice/porcupine_params_ko.pv
+    - assets/voice/rhino_params_ko.pv
+    - assets/voice/Yovis_ko_android_v3_0_0.rhn
+    - assets/voice/데이지_ko_android_v2_2_0.ppn
+    - assets/voice/요비스_ko_android_v2_2_0.ppn
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

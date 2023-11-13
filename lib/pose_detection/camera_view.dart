@@ -1,9 +1,18 @@
 import 'dart:io';
 
+import 'package:cabston/RecordTab.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
+import 'package:cabston/RecordPage.dart';
+import 'package:rhino_flutter/rhino.dart';
+import 'package:rhino_flutter/rhino_manager.dart';
+import 'package:rhino_flutter/rhino_error.dart';
+
+import 'package:porcupine_flutter/porcupine_error.dart';
+import 'package:porcupine_flutter/porcupine_manager.dart';
+import 'package:porcupine_flutter/porcupine.dart';
 
 class CameraView extends StatefulWidget {
   CameraView(
@@ -39,6 +48,102 @@ class _CameraViewState extends State<CameraView> {
   double _currentExposureOffset = 0.0;
   bool _changingCameraLens = false;
 
+  RhinoManager? _rhinoManager;
+  PorcupineManager? _porcupineManager;
+
+  String intend = "";
+  int callVoice = 0;
+  //////////////Rhino 관련 함수///////////////
+
+  //음성을 인식하면 호출되는 함수
+  void inferenceCallback(RhinoInference inference) {
+    if(inference.isUnderstood!){
+      String intent = inference.intent!;
+      Map<String, String> slots = inference.slots!;
+      setState(() {
+        if(intent=='start')
+          isStart = true;
+        else if(intent=='stop')
+          isStart = false;
+      });
+      Future.delayed(const Duration(milliseconds: 5000), () {
+        setState(() {
+          intend = "";
+          callVoice = 0;
+        });
+      });
+    }else{//모델에 없는 음성을 인식함
+      setState(() {
+        callVoice = 0;
+      });
+    }
+  }
+
+  //Rhino 초기 세팅
+  Future<void> startIntent() async{
+    try {
+      _rhinoManager = await RhinoManager.create(
+          "Z1fKua1jlJ9VmcdqbrQXCmYrUGoLyslZsapGBHIcy34XxkT41fhrQQ==",
+          "assets/voice/Yovis_ko_android_v3_0_0.rhn",
+          inferenceCallback,
+          modelPath : "assets/voice/rhino_params_ko.pv");
+    } on RhinoException catch (err) {
+      // h
+    }
+  }
+
+  Future<void> rhinoStart() async {
+    if (_rhinoManager == null) {
+      await startIntent();
+      //wakeword 객체 없으면 생성하고 실행
+    }
+    try {
+      await _rhinoManager!.process();
+    } on RhinoException catch (e) {
+      print("start rhino error : $e");
+    }
+  }
+  ///////////////////////////////
+
+  //////////////wake word 관련 함수////////////////
+  Future<void> startWakeWord() async {
+    if (_porcupineManager != null) {
+      await _porcupineManager?.delete();
+      _porcupineManager = null;
+    }
+    try {
+      _porcupineManager = await PorcupineManager.fromKeywordPaths(
+          "Z1fKua1jlJ9VmcdqbrQXCmYrUGoLyslZsapGBHIcy34XxkT41fhrQQ==",
+          ["assets/voice/데이지_ko_android_v2_2_0.ppn", "assets/voice/요비스_ko_android_v2_2_0.ppn"],
+          wakeWordCallback // wake word 가 호출 되면 해당 함수로 이동
+          ,modelPath: "assets/voice/porcupine_params_ko.pv");
+    } catch(e) {
+      print("wakeWord manage error : $e");
+    }
+  }
+
+  void wakeWordCallback(int keywordIndex) {
+    if (keywordIndex >= 0) {
+      setState(() {
+        callVoice = 1;
+      });
+      rhinoStart();
+    }
+  }
+  ////////////////////////////////
+
+  Future<void> _startProcessing() async {
+    if (_porcupineManager == null) {
+      await startWakeWord();
+      //wakeword 객체 없으면 생성하고 실행
+    }
+    try {
+      await _porcupineManager!.start();
+    } on PorcupineException catch (e) {
+      print("start wake word error : $e");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -69,6 +174,7 @@ class _CameraViewState extends State<CameraView> {
 
   @override
   Widget build(BuildContext context) {
+    _startProcessing();
     return Scaffold(body: _liveFeedBody());
   }
 
@@ -94,8 +200,8 @@ class _CameraViewState extends State<CameraView> {
           _backButton(),
           _switchLiveCameraToggle(),
           _detectionViewModeToggle(),
-          //_zoomControl(),
-          //_exposureControl(),
+          _zoomControl(),
+          _exposureControl(),
         ],
       ),
     );
@@ -109,7 +215,8 @@ class _CameraViewState extends State<CameraView> {
       width: 50.0,
       child: FloatingActionButton(
         heroTag: Object(),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () => Navigator.push(context,MaterialPageRoute(
+            builder: (context) => resultPage()),),
         backgroundColor: Colors.black54,
         child: Icon(
           Icons.arrow_back_ios_outlined,

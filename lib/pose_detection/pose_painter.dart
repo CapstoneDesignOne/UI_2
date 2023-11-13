@@ -4,19 +4,36 @@ import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:vector_math/vector_math.dart' as vm;
-
-
 import 'coord.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:cabston/RecordPage.dart';
 
 class PosePainter extends CustomPainter {
+
   PosePainter(
+      this.exellent_upper,
+      this.exellent_lower,
+      this.good_upper,
+      this.good_lower,
+      this.normal_upper,
+      this.normal_lower,
+      //this.compared_angles, //
       this.poses,
       this.imageSize,
       this.rotation,
       this.cameraLensDirection,
-      );
+      ) {
+    //sendData(10);
+  }
 
+  //final List<double> compared_angles; //
+  final exellent_upper;
+  final exellent_lower;
+  final good_upper;
+  final good_lower;
+  final normal_upper;
+  final normal_lower;
   final List<Pose> poses;
   final Size imageSize;
   final InputImageRotation rotation;
@@ -25,6 +42,7 @@ class PosePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) async {
+    //sendData(10);
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0
@@ -55,32 +73,21 @@ class PosePainter extends CustomPainter {
       ..strokeWidth = 3.0
       ..color = Colors.blueAccent;
 
-    final Crank = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3.0
-      ..color = Colors.greenAccent;
-
     final Drank = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.0
       ..color = Colors.yellowAccent;
 
+
+    int frame_score = 0;
+    int count = 0;
+    /*
     var g = 0.0;
     var radian = pi/180.0;
-    int counter = 0;
+
     const int samplingInterval = 300;
     var z = 0.0;
-    var anglename = {
-      0 : '오른쪽 팔꿈치',
-      1 : '왼쪽 팔꿈치',
-      2 : '오른쪽 겨드랑이',
-      3 : '왼쪽 겨드랑이',
-      4 : '오른쪽 고관절',
-      5 : '왼쪽 고관절',
-      6 : '오른쪽 무릎',
-      7 : '왼쪽 무릎',
-      8 : '목'
-    };
+
     var w  = [-9.51273227e+00, -3.32848430e+00,  3.15798734e+01,-4.01174322e+01,
       5.13610608e+01 , 4.57422785e+01 , 4.64176786e+01, -4.62281187e+01,
           -8.91498310e+01, -3.45757496e+01 , 2.77923207e+01 , 4.99065075e+01,
@@ -100,13 +107,15 @@ class PosePainter extends CustomPainter {
     vm.Vector3 leftfoot = vm.Vector3(w[24],w[25],w[26]);
     vm.Vector3 rightfoot = vm.Vector3(w[27],w[28],w[29]);
     var b = -0.00047337167902949755;
+    */
 
 
 
     var angles_mean = [-0.77822538, -0.79229441 ,-0.87741574,-0.94663571 ,-0.04150215 , 0.01572251,
-        -0.94498367 ,-0.97689872, -0.24132603];
+      -0.94498367 ,-0.97689872, -0.24132603];
 
     for (final pose in poses) {
+
       /*pose.landmarks.forEach((_, landmark) {
         canvas.drawCircle(
             Offset(
@@ -132,131 +141,14 @@ class PosePainter extends CustomPainter {
        */
 
 
-      void checkArm( PoseLandmarkType type1, PoseLandmarkType type2,PoseLandmarkType type3,
-          PoseLandmarkType type4, PoseLandmarkType type5,
-          double standard,int anglename){
 
-        final PoseLandmark joint1 = pose.landmarks[type1]!;
-        final PoseLandmark joint2 = pose.landmarks[type2]!;
-        final PoseLandmark joint3 = pose.landmarks[type3]!;
-        final PoseLandmark joint4 = pose.landmarks[type4]!;
-        final PoseLandmark joint5 = pose.landmarks[type5]!;
-
-        vm.Vector3 coord1 = vm.Vector3(joint1.x-joint5.x,
-            joint1.y-joint5.y,
-            joint1.z-joint5.z);
-        vm.Vector3 coord2 = vm.Vector3(joint4.x-joint5.x,joint4.y-joint5.y,joint4.z-joint5.z);
-
-        // compute inner product
-        double angle = vm.dot3(coord1, coord2)/coord1.length/coord2.length;
-        angle-=standard;
-        if(angle<0.0)
-          angle*=-1;
-
-        if (1-cos(5.0*radian) < angle) {
-          canvas.drawCircle(
-              Offset(
-                  translateX(
-                    joint5.x,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  ),
-                  translateY(
-                    joint5.y,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  )
-              ), 100.0, Srank);
-        }
-        else if(1-cos(10.0*radian) < angle) {
-          canvas.drawCircle(
-              Offset(
-                  translateX(
-                    joint5.x,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  ),
-                  translateY(
-                    joint5.y,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  )
-              ), 100.0, Arank);
-        }
-        else if (1-cos(15.0*radian) < angle) {
-          canvas.drawCircle(
-              Offset(
-                  translateX(
-                    joint5.x,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  ),
-                  translateY(
-                    joint5.y,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  )
-              ), 100.0, Brank);
-        }
-        else if (1-cos(30.0*radian) < angle) {
-          canvas.drawCircle(
-              Offset(
-                  translateX(
-                    joint5.x,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  ),
-                  translateY(
-                    joint5.y,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  )
-              ), 100.0, Crank);
-        }
-        else {
-          canvas.drawCircle(
-              Offset(
-                  translateX(
-                    joint5.x,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  ),
-                  translateY(
-                    joint5.y,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  )
-              ), 100.0, Drank);
-        }
-      }
 
       void checkOther( PoseLandmarkType type1, PoseLandmarkType type2,PoseLandmarkType type3,
-          double standard,int anglename){
+          int index){
 
         final PoseLandmark joint1 = pose.landmarks[type1]!;
         final PoseLandmark joint2 = pose.landmarks[type2]!;
         final PoseLandmark joint3 = pose.landmarks[type3]!;
-
 
         vm.Vector3 coord1 = vm.Vector3(joint1.x-joint3.x,
             joint1.y-joint3.y,
@@ -265,11 +157,10 @@ class PosePainter extends CustomPainter {
 
         // compute inner product
         double angle = vm.dot3(coord1, coord2)/coord1.length/coord2.length;
-        angle-=standard;
-        if(angle<0.0)
-          angle*=-1;
+        //angle-=standard;
 
-        if (1-cos(5.0*radian) < angle) {
+        if (exellent_lower[index] <= angle && angle <= exellent_upper[index]) {
+          frame_score+=100;
           canvas.drawCircle(
               Offset(
                   translateX(
@@ -288,7 +179,8 @@ class PosePainter extends CustomPainter {
                   )
               ), 100.0, Srank);
         }
-        else if(1-cos(10.0*radian) < angle) {
+        else if(good_lower[index]<= angle && angle <= good_upper[index]) {
+          frame_score+=80;
           canvas.drawCircle(
               Offset(
                   translateX(
@@ -307,7 +199,8 @@ class PosePainter extends CustomPainter {
                   )
               ), 100.0, Arank);
         }
-        else if (1-cos(15.0*radian) < angle) {
+        else if (normal_lower[index]<= angle && angle <=normal_lower[index]) {
+          frame_score+=60;
           canvas.drawCircle(
               Offset(
                   translateX(
@@ -326,26 +219,8 @@ class PosePainter extends CustomPainter {
                   )
               ), 100.0, Brank);
         }
-        else if (1-cos(30.0*radian) < 1-angle) {
-          canvas.drawCircle(
-              Offset(
-                  translateX(
-                    joint3.x,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  ),
-                  translateY(
-                    joint3.y,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  )
-              ), 100.0, Crank);
-        }
         else {
+          frame_score+=40;
           canvas.drawCircle(
               Offset(
                   translateX(
@@ -422,6 +297,7 @@ class PosePainter extends CustomPainter {
         return vm.dot3(vec, weight);
       }
 
+      /*
       void checkpose() {
         z+=something(PoseLandmarkType.nose, head, false);
         z+=something(PoseLandmarkType.rightWrist, righttHand, false);
@@ -478,11 +354,14 @@ class PosePainter extends CustomPainter {
         }
       }
 
+       */
+
+      /*
       void processFrame() {
         counter++;
 
         if (counter % samplingInterval == 0) {
-          checkpose();
+          //checkpose();
         }
 
         if (counter >= 10000) { // 예를 들어 10000 프레임마다 카운터를 초기화
@@ -490,48 +369,45 @@ class PosePainter extends CustomPainter {
         }
       }
 
+       */
       //processFrame();
       //checkpose();
 
-      if(true) {
-        //Draw angles
-        // 오른쪽 팔꿈치
-        checkArm(PoseLandmarkType.rightWrist,
-            PoseLandmarkType.rightPinky,
-            PoseLandmarkType.rightIndex,
-            PoseLandmarkType.rightShoulder,
-            PoseLandmarkType.rightElbow, angles_mean[0], 0);
-        // 왼쪽 팔꿈치
-        checkArm(PoseLandmarkType.leftWrist,
-            PoseLandmarkType.leftPinky,
-            PoseLandmarkType.leftIndex,
-            PoseLandmarkType.leftShoulder,
-            PoseLandmarkType.leftElbow, angles_mean[1], 1);
-        // 오른쪽 겨드랑이
-        checkOther(PoseLandmarkType.rightElbow,
-            PoseLandmarkType.rightHip,
-            PoseLandmarkType.rightShoulder, angles_mean[2], 2);
-        // 왼쪽 겨드랑이
-        checkOther(PoseLandmarkType.leftElbow,
-            PoseLandmarkType.leftHip,
-            PoseLandmarkType.leftShoulder, angles_mean[3], 3);
-        // 오른쪽 고관절
-        checkOther(PoseLandmarkType.rightShoulder,
-            PoseLandmarkType.rightKnee,
-            PoseLandmarkType.rightHip, angles_mean[4], 4);
-        // 왼쪽 고관절
-        checkOther(PoseLandmarkType.leftShoulder,
-            PoseLandmarkType.leftKnee,
-            PoseLandmarkType.leftHip, angles_mean[5], 5);
-        // 오른쪽 무릎
-        checkOther(PoseLandmarkType.rightHip,
-            PoseLandmarkType.rightAnkle,
-            PoseLandmarkType.rightKnee, angles_mean[6], 6);
-        // 왼쪽 무릎
-        checkOther(PoseLandmarkType.leftHip,
-            PoseLandmarkType.leftAnkle,
-            PoseLandmarkType.leftKnee, angles_mean[7], 7);
-      }
+      // 오른쪽 팔꿈치
+      checkOther(PoseLandmarkType.rightWrist,
+          PoseLandmarkType.rightShoulder,
+          PoseLandmarkType.rightElbow, 0);
+      // 왼쪽 팔꿈치
+      checkOther(PoseLandmarkType.leftWrist,
+          PoseLandmarkType.leftShoulder,
+          PoseLandmarkType.leftElbow, 1);
+      // 오른쪽 겨드랑이
+      checkOther(PoseLandmarkType.rightElbow,
+          PoseLandmarkType.rightHip,
+          PoseLandmarkType.rightShoulder, 2);
+      // 왼쪽 겨드랑이
+      checkOther(PoseLandmarkType.leftElbow,
+          PoseLandmarkType.leftHip,
+          PoseLandmarkType.leftShoulder,3);
+      // 오른쪽 고관절
+      checkOther(PoseLandmarkType.rightShoulder,
+          PoseLandmarkType.rightKnee,
+          PoseLandmarkType.rightHip,  4);
+      // 왼쪽 고관절
+      checkOther(PoseLandmarkType.leftShoulder,
+          PoseLandmarkType.leftKnee,
+          PoseLandmarkType.leftHip,  5);
+      // 오른쪽 무릎
+      checkOther(PoseLandmarkType.rightHip,
+          PoseLandmarkType.rightAnkle,
+          PoseLandmarkType.rightKnee,  6);
+      // 왼쪽 무릎
+      checkOther(PoseLandmarkType.leftHip,
+          PoseLandmarkType.leftAnkle,
+          PoseLandmarkType.leftKnee,  7);
+
+      ttmp.addScore(frame_score);
+      //sendData(frame_score);
 
       //Draw arms
       /*
@@ -564,17 +440,11 @@ class PosePainter extends CustomPainter {
           PoseLandmarkType.rightKnee, PoseLandmarkType.rightAnkle, rightPaint);
 
        */
+      //frame_score++;
+      //sendData(frame_score);
 
-
-
-      z = 0.0;
-
-      /*
-
-       */
+      //canvas.drawImageRect(image, src, dst, paint)
     }
-
-
   }
 
   @override
