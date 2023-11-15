@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:cabston/PlayTab.dart';
+import 'package:cabston/playTab/PlayTab.dart';
 import 'package:cabston/pose_detection/pose_detector_view.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+//요가 자세 설명문 페이지
 class exp_yoga_ch extends StatelessWidget{
   final changeViews;
   exp_yoga_ch(this.changeViews,{super.key});

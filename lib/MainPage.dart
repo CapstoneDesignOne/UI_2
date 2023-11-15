@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:cabston/PlayTab.dart';
+import 'package:cabston/playTab/PlayTab.dart';
 import 'package:cabston/RecordTab.dart';
 import 'package:cabston/YogaCalenderTab.dart';
-import 'package:cabston/exp_yoga_ch.dart';
+import 'package:cabston/playTab/exp_yoga_ch.dart';
 
 
 class TabPage extends StatefulWidget {
@@ -120,8 +120,8 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin  
               indicator: BoxDecoration( // 모양 깍음
                 color: Color(0xFFC8FCC3),
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(50),
-                  topRight: Radius.circular(50),
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25),
                 ),
               ),
               labelColor: Colors.black,
@@ -156,20 +156,13 @@ class customTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 50,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
-          ),
-        ),
         child: Text(
           tabName,
           style: TextStyle(
-            fontSize: 24, // 원하는 크기로 설정
-            fontWeight: FontWeight.bold, // 글씨체를 굵게 설정
+            fontSize: 22, // 원하는 크기로 설정
+            fontWeight: FontWeight.w600, // 글씨체를 굵게 설정
           ),
+            textAlign: TextAlign.center,//글씨체 가운데 정렬
         )
     );
   }
