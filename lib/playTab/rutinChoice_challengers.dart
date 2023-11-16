@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 
 class rutinChoice_challengers extends StatelessWidget {
-  final changeViews;
-  const rutinChoice_challengers(this.changeViews,{super.key});
+  final changeView;
+  const rutinChoice_challengers(this.changeView,{super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class rutinChoice_challengers extends StatelessWidget {
                 IconButton(
                   iconSize: 25,
                   onPressed: () {
-                    changeViews(1);
+                    changeView(1);
                   },
                   icon: Icon(Icons.backspace_outlined),
                 ),
@@ -33,7 +33,7 @@ class rutinChoice_challengers extends StatelessWidget {
                   // Adjust the margin as needed
                   InkWell(
                     onTap: () {
-                      changeViews(3);
+                      changeView(3);
                     },
                     child: Image.asset('assets/chellen/level1.png'),
                   ),

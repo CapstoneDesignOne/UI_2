@@ -14,7 +14,8 @@ class TabPage extends StatefulWidget {
 }
 
 class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin  {
-
+  @override
+  bool get wantKeepAlive => true;
   late TabController _tabController;
   String appBarTitle = ''; // 날짜 문자열을 저장할 변수
   TextStyle appBarTitleStyle = TextStyle(

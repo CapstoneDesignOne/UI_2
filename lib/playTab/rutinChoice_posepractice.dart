@@ -16,7 +16,7 @@ class rutinChoice_posePractice extends StatelessWidget {
                 IconButton(
                   iconSize: 25,
                   onPressed: () {
-                    changeViews(1);
+                    changeViews(4);
                   },
                   icon: Icon(Icons.backspace_outlined),
                 ),
@@ -25,11 +25,14 @@ class rutinChoice_posePractice extends StatelessWidget {
             SingleChildScrollView(
               child: Column(
                 children: [
+                  Image.asset(
+                    'assets/chellen/pose_title.png',
+                  ),
                   InkWell(
                     onTap: () {
                       changeViews(3);
                     },
-                    child: Image.asset('assets/chellen/level1.png'),
+                    child: Image.asset('assets/chellen/level1_re.png'),
                   ),
                   SizedBox(height: 30,),
                   InkWell(

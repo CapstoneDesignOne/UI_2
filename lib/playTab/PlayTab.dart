@@ -6,6 +6,9 @@ import 'package:cabston/playTab/recomandCustombutton_posepractice.dart';
 import 'package:cabston/playTab/recomandCustombutton_challengers.dart';
 import 'package:cabston/playTab/rutinChoice_challengers.dart';
 import 'package:cabston/playTab/rutinChoice_posepractice.dart';
+import 'package:cabston/playTab/poseChoice_posePractive.dart';
+import 'package:cabston/playTab/poseChoice_challengers.dart';
+import 'package:cabston/playTab/exp_yoga_ch_custom.dart';
 
 class PlayYogaTab extends StatefulWidget {
   const PlayYogaTab({super.key});
@@ -14,7 +17,10 @@ class PlayYogaTab extends StatefulWidget {
   State<PlayYogaTab> createState() => _PlayYogaTabState();
 }
 
-class _PlayYogaTabState extends State<PlayYogaTab> {
+class _PlayYogaTabState extends State<PlayYogaTab> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   int practice = 0;
   void changeView(int num) {
     setState(() {
@@ -25,16 +31,22 @@ class _PlayYogaTabState extends State<PlayYogaTab> {
   @override
   Widget build(BuildContext context) {
     switch(practice) {
-      case 1 :// 챌린져스 버튼을 누르면 화면이 바뀌면서 추천루틴,커스텀이 뜬다.
+      case 1 :// 챌린져스 -> 추천루틴,커스텀이 뜬다.
         return posetab_challengers(changeView);
       case 2: //  챌린져스 ->추천루틴 -> level1,level2,leve3 페이지로 이동
         return rutinChoice_challengers(changeView);
       case 3: // 챌린져스 ->추천루틴 -> level 1선택시 요가 자세 설명문으로 이동한다.
         return exp_yoga_ch(changeView); //이름 바꾸기
-      case 4: // 자세연습 버튼을 누르면 화면이 바뀌면서 추천루틴, 커스텀이 뜬다.
+      case 4: // 자세연습 -> 추천루틴, 커스텀
         return posetab_posePractice(changeView);
       case 5: // 자세연습 ->추천루틴 -> level1,level2,level3 페이지로 이동
         return rutinChoice_posePractice(changeView);
+      case 6: // 자세연습 -> 커스텀 -> 자세선택버튼
+        return poseChoice_posePractive(changeView);
+      case 7: // 챌린져스 -> 커스텀 ->자세선택버튼
+        return poseChoice_challengers(changeView);
+      case 8: // 챌린져스 -> 커스텀 ->자세선택버튼 ->요가 자세 설명
+        return exp_yoga_ch_custom(changeView);
       default : return ChoicePlayMode(changeView);
     }
   }

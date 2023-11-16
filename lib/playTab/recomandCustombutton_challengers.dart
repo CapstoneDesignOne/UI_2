@@ -17,10 +17,13 @@ class posetab_challengers extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                  iconSize:20, //practice = 0으로 바뀐다.
+                  iconSize:25, //practice = 0으로 바뀐다.
                   onPressed: (){changeView(0);},  // 버튼 눌면 첫 탭화면으로 간다.
                   icon: Icon(Icons.backspace_outlined))
             ],
+          ),
+          Image.asset(
+            'assets/chellen/ch_title.png',
           ),
           Expanded(
             flex: 1, // 첫 번째 Expanded 위젯
@@ -41,7 +44,7 @@ class posetab_challengers extends StatelessWidget {
             flex: 1, // 두 번째 Expanded 위젯
             child: InkWell(
               onTap: () {
-                // 두 번째 이미지 버튼을 눌렀을 때 수행할 동작 추가
+                changeView(7); // 챌린져스->자세연습->자세선택
               },
               child: Image.asset(
                 'assets/chellen/custom_button.png',

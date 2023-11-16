@@ -4,9 +4,9 @@ import 'package:cabston/pose_detection/pose_detector_view.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 //요가 자세 설명문 페이지
-class exp_yoga_ch extends StatelessWidget {
+class exp_yoga_ch_custom extends StatelessWidget {
   final changeViews;
-  exp_yoga_ch(this.changeViews,{super.key});
+  exp_yoga_ch_custom(this.changeViews,{super.key});
 
   final url = 'http://34.64.61.219:3000';//서버의 http 주소
   TextEditingController name = TextEditingController();//textfield로 데이터 입력 받음.
@@ -128,7 +128,7 @@ class exp_yoga_ch extends StatelessWidget {
               iconSize: 50,
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => PoseDetectorView()),);
-                },
+              },
               icon: Icon(Icons.camera)
           ),
           Container(

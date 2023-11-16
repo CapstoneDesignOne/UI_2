@@ -74,6 +74,11 @@ flutter:
     - assets/chellen/level2.png
     - assets/chellen/level3.png
     - assets/chellen/ch_title.png
+    - assets/chellen/re_title.png
+    - assets/chellen/level1_re.png
+    - assets/chellen/pose_title.png
+    - assets/chellen/text.png
+    - assets/chellen/Start.png
     - assets/login/Lotus.png
     - assets/login/Yoga (1).png
     - assets/profile_picture.png
