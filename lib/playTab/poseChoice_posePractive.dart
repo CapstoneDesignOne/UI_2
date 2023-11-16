@@ -127,7 +127,7 @@ class _poseChoice_posePractiveState extends State<poseChoice_posePractive> {
               if (selectedImages.isNotEmpty) // 자세 선택해야 start 버튼 생겨남
                 ElevatedButton(
                   onPressed: () {
-                    // Start 버튼 눌렀을 때 동작
+                    widget.changeView(3);
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.transparent), // 버튼 배경투명

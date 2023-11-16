@@ -10,13 +10,14 @@ class poseChoice_challengers extends StatefulWidget {
 }
 
 class _poseChoice_challengersState extends State<poseChoice_challengers> {
-  List<String> selectedPoses = []; // 서버 전송용
-  final List<int> selectedPoses_int = []; // 내부 코드용
-  List<String> selectedImages = [];
-  final List<String> selectedPoseName = ["다운독","측면널빤지자세","활자세","하이런지자세",
+   List<String> selectedPoses = []; // 서버 전송용
+   List<int> selectedPoses_int = [1]; // 내부 코드용
+   List<String> selectedImages = [];
+   List<String> selectedPoseName = ["다운독","측면널빤지자세","활자세","하이런지자세",
     "연꽃자세","코브라자세","견장자세","보트자세","어깨서기자세","쟁기자세","전사자세3",
     "반달자세","선 전굴자세","전사자세2","나무자세","교각자세"
   ];
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -127,7 +128,7 @@ class _poseChoice_challengersState extends State<poseChoice_challengers> {
               if (selectedImages.isNotEmpty) // 자세 선택해야 start 버튼 생겨남
                 ElevatedButton(
                   onPressed: () {
-                    widget.changeView(8);
+                      widget.changeView(8);
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.transparent), // 버튼 배경투명
@@ -136,7 +137,6 @@ class _poseChoice_challengersState extends State<poseChoice_challengers> {
                   ),
                   child: Image.asset(
                     'assets/chellen/Start.png',
-
                   ),
                 ),
             ],

@@ -29,7 +29,8 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFDEFFEF),
-      body: SingleChildScrollView(
+      body:
+      SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
         child: Center(
           child: Column(
@@ -103,17 +104,6 @@ class LoginPage extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // 로그인 버튼을 눌렀을 때 Tab 페이지로 이동
-                    },
-                    child: Text('회원가입'),
-                  ),
-                  // 다른 위젯들을 필요에 따라 추가
-                ],
               ),
               ElevatedButton(
                 onPressed: () {
