@@ -9,10 +9,13 @@ import 'package:cabston/RecordPage.dart';
 import 'package:rhino_flutter/rhino.dart';
 import 'package:rhino_flutter/rhino_manager.dart';
 import 'package:rhino_flutter/rhino_error.dart';
-
+import 'dart:math';
 import 'package:porcupine_flutter/porcupine_error.dart';
 import 'package:porcupine_flutter/porcupine_manager.dart';
 import 'package:porcupine_flutter/porcupine.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
+bool aaa = false;
 
 class CameraView extends StatefulWidget {
   CameraView(
@@ -31,6 +34,7 @@ class CameraView extends StatefulWidget {
   final VoidCallback? onDetectorViewModeChanged;
   final Function(CameraLensDirection direction)? onCameraLensDirectionChanged;
   final CameraLensDirection initialCameraLensDirection;
+  bool isStart = false;
 
   @override
   State<CameraView> createState() => _CameraViewState();
@@ -47,34 +51,32 @@ class _CameraViewState extends State<CameraView> {
   double _maxAvailableExposureOffset = 0.0;
   double _currentExposureOffset = 0.0;
   bool _changingCameraLens = false;
+  FlutterTts tts = FlutterTts();
+  //bool asdf = widget.isStart;
 
   RhinoManager? _rhinoManager;
   PorcupineManager? _porcupineManager;
 
-  String intend = "";
-  int callVoice = 0;
   //////////////Rhino 관련 함수///////////////
 
   //음성을 인식하면 호출되는 함수
   void inferenceCallback(RhinoInference inference) {
+
     if(inference.isUnderstood!){
       String intent = inference.intent!;
       Map<String, String> slots = inference.slots!;
+
       setState(() {
-        if(intent=='start')
-          isStart = true;
-        else if(intent=='stop')
-          isStart = false;
-      });
-      Future.delayed(const Duration(milliseconds: 5000), () {
-        setState(() {
-          intend = "";
-          callVoice = 0;
-        });
-      });
-    }else{//모델에 없는 음성을 인식함
-      setState(() {
-        callVoice = 0;
+        if(intent=='start') {
+          widget.isStart = true;
+          aaa = true;
+          tts.speak("시작합니다.");
+        }
+        else if(intent=='stop') {
+          widget.isStart = false;
+          aaa = false;
+          tts.speak("종료합니다.");
+        }
       });
     }
   }
@@ -123,10 +125,11 @@ class _CameraViewState extends State<CameraView> {
   }
 
   void wakeWordCallback(int keywordIndex) {
+    tts.setLanguage('ko');
+    tts.setSpeechRate(0.5);
+    tts.setPitch(1);
     if (keywordIndex >= 0) {
-      setState(() {
-        callVoice = 1;
-      });
+      tts.speak("네");
       rhinoStart();
     }
   }
@@ -174,11 +177,11 @@ class _CameraViewState extends State<CameraView> {
 
   @override
   Widget build(BuildContext context) {
-    _startProcessing();
     return Scaffold(body: _liveFeedBody());
   }
 
   Widget _liveFeedBody() {
+    //_startProcessing();
     if (_cameras.isEmpty) return Container();
     if (_controller == null) return Container();
     if (_controller?.value.isInitialized == false) return Container();
@@ -199,13 +202,61 @@ class _CameraViewState extends State<CameraView> {
           ),
           _backButton(),
           _switchLiveCameraToggle(),
-          _detectionViewModeToggle(),
+          //_detectionViewModeToggle(),
           _zoomControl(),
           _exposureControl(),
+          _ScoreBox(),
         ],
       ),
     );
   }
+
+  Widget _ScoreBox() => Positioned(
+      bottom: 8,
+      left: 8,
+      child: Transform.rotate(
+        angle: pi/2,
+        child: Container(
+            height:75.0,
+            width: 75.0,
+            color: Colors.amber,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children : [
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('${ttmp.ddd1[0]}'),
+                        Text('${ttmp.ddd1[1]}'),
+                      ]
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('${ttmp.ddd1[2]}'),
+                        Text('${ttmp.ddd1[3]}'),
+                      ]
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('${ttmp.ddd1[4]}'),
+                        Text('${ttmp.ddd1[5]}'),
+                      ]
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('${ttmp.ddd1[6]}'),
+                        Text('${ttmp.ddd1[7]}'),
+                      ]
+                  ),
+
+                ]
+            )
+        ),
+      )
+  );
 
   Widget _backButton() => Positioned(
     top: 40,
@@ -215,8 +266,13 @@ class _CameraViewState extends State<CameraView> {
       width: 50.0,
       child: FloatingActionButton(
         heroTag: Object(),
-        onPressed: () => Navigator.push(context,MaterialPageRoute(
-            builder: (context) => resultPage()),),
+        onPressed: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context)=>resultPage(aaa),),
+          );
+
+          },
         backgroundColor: Colors.black54,
         child: Icon(
           Icons.arrow_back_ios_outlined,
@@ -363,6 +419,7 @@ class _CameraViewState extends State<CameraView> {
   );
 
   Future _startLiveFeed() async {
+    _startProcessing();
     final camera = _cameras[_cameraIndex];
     _controller = CameraController(
       camera,

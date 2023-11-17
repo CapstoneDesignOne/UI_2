@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
-import 'package:audioplayers/audioplayers.dart';
+//import 'package:audioplayers/audioplayers.dart';
 import 'package:vector_math/vector_math.dart' as vm;
 import 'coord.dart';
 import 'package:http/http.dart' as http;
@@ -79,7 +79,7 @@ class PosePainter extends CustomPainter {
       ..color = Colors.yellowAccent;
 
 
-    int frame_score = 0;
+    List<int> score = List.generate(8, (index) => 0);
     int count = 0;
     /*
     var g = 0.0;
@@ -150,94 +150,45 @@ class PosePainter extends CustomPainter {
         final PoseLandmark joint2 = pose.landmarks[type2]!;
         final PoseLandmark joint3 = pose.landmarks[type3]!;
 
+        //cos calculate
         vm.Vector3 coord1 = vm.Vector3(joint1.x-joint3.x,
             joint1.y-joint3.y,
             joint1.z-joint3.z);
         vm.Vector3 coord2 = vm.Vector3(joint2.x-joint3.x,joint2.y-joint3.y,joint2.z-joint3.z);
 
         // compute inner product
-        double angle = vm.dot3(coord1, coord2)/coord1.length/coord2.length;
+        double angle = vm.dot3(coord1, coord2)/(coord1.length*coord2.length);
         //angle-=standard;
 
+
+        //angle calculate
+        /*
+        vm.Vector2 coord1 = vm.Vector2(joint1.x-joint3.x,
+            joint1.y-joint3.y);
+        vm.Vector2 coord2 = vm.Vector2(joint2.x-joint3.x,joint2.y-joint3.y);
+
+        // compute inner product
+        double angle = vm.degrees(atan2(coord1[0], coord1[1])-atan2(coord2[0], coord2[1]));
+        //angle-=standard;
+
+        angle = angle.abs();
+        if (angle > 180){
+          angle = 360.0 - angle;
+        }
+
+         */
+
         if (exellent_lower[index] <= angle && angle <= exellent_upper[index]) {
-          frame_score+=100;
-          canvas.drawCircle(
-              Offset(
-                  translateX(
-                    joint3.x,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  ),
-                  translateY(
-                    joint3.y,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  )
-              ), 100.0, Srank);
+          score[index]+=100;
         }
         else if(good_lower[index]<= angle && angle <= good_upper[index]) {
-          frame_score+=80;
-          canvas.drawCircle(
-              Offset(
-                  translateX(
-                    joint3.x,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  ),
-                  translateY(
-                    joint3.y,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  )
-              ), 100.0, Arank);
+          score[index]+=90;
         }
         else if (normal_lower[index]<= angle && angle <=normal_lower[index]) {
-          frame_score+=60;
-          canvas.drawCircle(
-              Offset(
-                  translateX(
-                    joint3.x,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  ),
-                  translateY(
-                    joint3.y,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  )
-              ), 100.0, Brank);
+          score[index]+=80;
         }
         else {
-          frame_score+=40;
-          canvas.drawCircle(
-              Offset(
-                  translateX(
-                    joint3.x,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  ),
-                  translateY(
-                    joint3.y,
-                    size,
-                    imageSize,
-                    rotation,
-                    cameraLensDirection,
-                  )
-              ), 100.0, Drank);
+          score[index]+=60;
         }
       }
 
@@ -406,23 +357,33 @@ class PosePainter extends CustomPainter {
           PoseLandmarkType.leftAnkle,
           PoseLandmarkType.leftKnee,  7);
 
-      ttmp.addScore(frame_score);
-      //sendData(frame_score);
+      /*
+      if(score[0]>score[1])
+        score[1] = score[0];
+      else
+        score[0] = score[1];
+      */
+      ttmp.addScore(score);
+
+      //sendData(rightArm_score);
 
       //Draw arms
-      /*
+
       paintLine(
-          PoseLandmarkType.leftShoulder, PoseLandmarkType.leftElbow, leftPaint);
+          PoseLandmarkType.leftShoulder, PoseLandmarkType.leftElbow,
+          leftPaint);
       paintLine(
           PoseLandmarkType.leftElbow, PoseLandmarkType.leftWrist, leftPaint);
       paintLine(PoseLandmarkType.rightShoulder, PoseLandmarkType.rightElbow,
           rightPaint);
       paintLine(
-          PoseLandmarkType.rightElbow, PoseLandmarkType.rightWrist, rightPaint);
+          PoseLandmarkType.rightElbow, PoseLandmarkType.rightWrist,
+          rightPaint);
 
       //Draw Body
       paintLine(
-          PoseLandmarkType.leftShoulder, PoseLandmarkType.rightShoulder, leftPaint);
+          PoseLandmarkType.leftShoulder, PoseLandmarkType.rightShoulder,
+          leftPaint);
       paintLine(
           PoseLandmarkType.rightHip, PoseLandmarkType.leftHip, leftPaint);
       paintLine(
@@ -431,17 +392,18 @@ class PosePainter extends CustomPainter {
           rightPaint);
 
       //Draw legs
-      paintLine(PoseLandmarkType.leftHip, PoseLandmarkType.leftKnee, leftPaint);
+      paintLine(
+          PoseLandmarkType.leftHip, PoseLandmarkType.leftKnee, leftPaint);
       paintLine(
           PoseLandmarkType.leftKnee, PoseLandmarkType.leftAnkle, leftPaint);
       paintLine(
           PoseLandmarkType.rightHip, PoseLandmarkType.rightKnee, rightPaint);
       paintLine(
-          PoseLandmarkType.rightKnee, PoseLandmarkType.rightAnkle, rightPaint);
+          PoseLandmarkType.rightKnee, PoseLandmarkType.rightAnkle,
+          rightPaint);
 
-       */
-      //frame_score++;
-      //sendData(frame_score);
+
+      //rightArm_score++
 
       //canvas.drawImageRect(image, src, dst, paint)
     }

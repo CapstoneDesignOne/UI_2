@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'detector_view.dart';
 import '../pose_detection//pose_painter.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 class PoseDetectorView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _PoseDetectorViewState();
@@ -21,6 +22,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
   var _cameraLensDirection = CameraLensDirection.front;
 
 
+  /*
   List<double> excellent_upper =
   [-0.9715523877837864,
     -0.9732056944509492,
@@ -93,6 +95,45 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
     0.5550641912010196,
     1.0];
 
+   */
+  List<dynamic> excellent_upper = [];
+  List<dynamic> excellent_lower = [];
+
+  List<dynamic> good_upper = [];
+  List<dynamic> good_lower = [];
+
+  List<dynamic> nomal_upper = [];
+  List<dynamic> nomal_lower = [];
+
+  Future<bool> userData() async {
+    final url = 'http://34.64.61.219:3000';
+    final response = await http.post(
+      Uri.parse(url+'/pose_detect/send_pose_name'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'pose_name': 'Adho Mukha Svanasana',
+      }),
+    );
+    if (response.statusCode == 200) {
+      var saveJson = json.decode(response.body);
+
+      excellent_upper = saveJson['excellent_upper'];
+      excellent_lower = saveJson['excellent_lower'];
+      good_upper = saveJson['good_upper'];
+      good_lower = saveJson['good_lower'];
+      nomal_upper = saveJson['nomal_upper'];
+      nomal_lower = saveJson['nomal_lower'];
+      return true;
+    } else {
+      throw Exception('Failed to load data');
+    }
+    return false;
+
+
+  }
+
   @override
   void dispose() async {
     _canProcess = false;
@@ -102,6 +143,7 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
 
   @override
   Widget build(BuildContext context) {
+    userData();
     return DetectorView(
       title: 'Pose Detector',
       customPaint: _customPaint,

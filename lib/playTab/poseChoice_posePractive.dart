@@ -13,7 +13,7 @@ class _poseChoice_posePractiveState extends State<poseChoice_posePractive> {
   List<String> selectedPoses = []; // 서버 전송용
   final List<int> selectedPoses_int = []; // 내부 코드용
   List<String> selectedImages = [];
-  final List<String> selectedPoseName = ["다운독","측면널빤지자세","활자세","하이런지자세",
+  final List<String> selectedPoseName = ["","다운독","측면널빤지자세","활자세","하이런지자세",
     "연꽃자세","코브라자세","견장자세","보트자세","어깨서기자세","쟁기자세","전사자세3",
     "반달자세","선 전굴자세","전사자세2","나무자세","교각자세"
   ];
@@ -136,7 +136,6 @@ class _poseChoice_posePractiveState extends State<poseChoice_posePractive> {
                   ),
                   child: Image.asset(
                     'assets/chellen/Start.png',
-
                   ),
                 ),
             ],

@@ -1,39 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:async';
+import 'pose_detection/camera_view.dart';
 
 var ttmp = Score();
-bool isStart = false;
+bool isSetting = true;
 
 class Score extends StatefulWidget {
   Score({super.key});
 
+
+  int counter = 0;
+  int counter2 = 0;
+
   int score = 100;
   int time_score = 100;
+  FlutterTts tts = FlutterTts();
+
+  List<String> ment  = [
+    '오른쪽 팔 문제',
+    '왼쪽 팔 문제',
+    '오른쪽 팔 문제',
+    '왼쪽 팔 문제',
+    '오른쪽 다리 문제',
+    '왼쪽 다리 문제',
+    '오른쪽 무릎 문제',
+    '왼쪽 무릎 문제'];
 
 
-  void addScore(int current) {
-    if(!isStart) {
-      score = 100;
-      time_score = 100;
-      return ;
-    }
+  late TextEditingController tts_text = TextEditingController();
+
+  int ddd = 0;
+  int minv = 0;
+  int minidx = 0;
+  int idx = 0;
+  List<int> ddd1=[0,0,0,0,0,0,0,0,];
+
+  void addScore (List<int> current) {
     // 포즈
-    score += (current>>3);
+    ddd1 = current;
+    ddd = 0;
+    minv = 200;
+    minidx = 0;
+    idx = 0;
+    current.forEach((i) {
+      ddd += i;
+      minv = (i<minv) ? i:minv;
+      minidx = (i==minv) ? idx : minidx;
+      idx++;
+    });
+
+
+    score += (ddd>>3);
     score = score>>1;
-    // 시간
-    if((current>>3)>=80) {
-      time_score+=100;
-      time_score = time_score >> 1;
+
+    if(counter%50==0) {
+      if(isSetting) {
+        tts.setLanguage('ko');
+        tts.setSpeechRate(0.5);
+        tts.setPitch(1);
+        isSetting = false;
+      }
+
+      if(aaa && minv < 80)
+        tts.speak(ment[minidx]);
+      counter=1;
     }
-    else if((current>>3)>=60){
-      time_score+=80;
-      time_score = time_score >> 1;
+    else
+      counter++;
+    //isSpeak = false;
+
+    /*
+    if (counter2 % 30 == 0) {
+      score += (ddd >> 3);
+      score = score >> 1;
+      // 시간
+      if ((ddd >> 3) >= 80) {
+        time_score += 100;
+        time_score = time_score >> 1;
+      }
+      else if ((ddd >> 3) >= 60) {
+        time_score += 80;
+        time_score = time_score >> 1;
+      }
+      else {
+        time_score += 60;
+        time_score = time_score >> 1;
+      }
+      counter2 = 1;
     }
     else {
-      time_score+=60;
-      time_score = time_score>>1;
+      counter2++;
     }
+    */
   }
 
   @override
@@ -43,6 +104,8 @@ class Score extends StatefulWidget {
 class _ScoreState extends State<Score> {
   //int score = 100;
 
+
+
   @override
   Widget build(BuildContext context) {
     return Text('Your Score : ${widget.score}');
@@ -50,6 +113,12 @@ class _ScoreState extends State<Score> {
 }
 
 class resultPage extends StatefulWidget {
+  resultPage(
+      this.isStart,
+      {super.key}
+      );
+
+  final bool isStart;
 
   @override
   resultPageState createState() => resultPageState();
@@ -68,6 +137,7 @@ class resultPageState extends State<resultPage> {
 //textfield로 데이터 입력 받음.
   String _statusMessage = '';
 //서버에 데이터를 보내고 상태를 저장할 변수
+
   Future<String> fetchData() async {
     final response = await http.post(Uri.parse(url+'/data'));//서버에서 데이터를 받아온다.
     if (response.statusCode == 200) {//200 = 정상적으로 연결 되었다.
@@ -96,12 +166,13 @@ class resultPageState extends State<resultPage> {
   //서버로 데이터를 보낸다.
   Future<void> sendData() async {
     final response = await http.post(
-      Uri.parse(url+'/pose_detect'),
+      Uri.parse(url+'/pose_point/send_yoga_point'),
       headers: {//보낼 데이터 형식(json)
         'Content-Type': 'application/json',
       },
       body: jsonEncode({//json 형식으로 보낼 데이터 입력
-        'current_score': '${ttmp.score}',
+        'user_num' : '1',
+        'pose_score': '${ttmp.score}',
         'time_score' : '${ttmp.time_score}',
       }),
     );
@@ -116,9 +187,11 @@ class resultPageState extends State<resultPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+    String PoseScore = (widget.isStart) ? '${ttmp.score}' : 'X';
+    String TimeScore = (widget.isStart) ? '${ttmp.time_score}' : 'X';
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: Text('당신의 점수를 확인하세요!')),
@@ -134,7 +207,7 @@ class resultPageState extends State<resultPage> {
                 SizedBox(
                   height: 20,
                 ),
-                Text('포즈점수 : ${ttmp.score}',
+                Text('포즈점수 : ${PoseScore}',
                   style: TextStyle(
                     fontSize: 50,
                   ),
@@ -142,7 +215,7 @@ class resultPageState extends State<resultPage> {
                 SizedBox(
                   height: 10,
                 ),
-                Text('시간점수 : ${ttmp.score}',
+                Text('시간점수 : ${TimeScore}',
                   style: TextStyle(
                     fontSize: 50,
                   ),
