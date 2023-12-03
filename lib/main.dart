@@ -1,15 +1,25 @@
+import 'package:cabston/selected_num.dart';
 import 'package:flutter/material.dart';
 import 'package:cabston/MainPage.dart';
 import 'package:rhino_flutter/rhino.dart';
 import 'package:rhino_flutter/rhino_manager.dart';
 import 'package:rhino_flutter/rhino_error.dart';
-
 import 'package:porcupine_flutter/porcupine_error.dart';
 import 'package:porcupine_flutter/porcupine_manager.dart';
 import 'package:porcupine_flutter/porcupine.dart';
+import 'package:provider/provider.dart';
+
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => selected_pose_num()),
+        // 다른 프로바이더들도 필요하다면 여기에 추가
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

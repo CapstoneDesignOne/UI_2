@@ -37,71 +37,7 @@ class exp_yoga_ch extends StatelessWidget {
   }
 
   @override
-  /*Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(iconSize: 25, onPressed: () {
-              changeViews(2);
-            }, icon: Icon(Icons.backspace_outlined)),
-          ],
-        ),
-        Expanded(
-            child: Column(
-              children: [
-                Container(
-                  child: Image(
-                    image: AssetImage('assets/pose/p_button_4.png'),
-                  ),
 
-                ),
-                FutureBuilder<String>(
-                  //비동기 처리(서버에서 데이터를 불러올 때까지 대기하며 보여줄 화면을 설정할 수 있다.)
-                  future: fetchData(),//비동기 함수(서버 연결)
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {// 서버 연결 완료
-                      return Text(snapshot.data!); // 서버에서 받은 데이터 보여준다
-                    } else if (snapshot.hasError) { // 연결 중 오류 발생
-                      return Text('${snapshot.error}');//오류 메세지
-                    }
-                    return CircularProgressIndicator();//서버 연결 전까지 보여줄 대기 화면
-                  },
-                ),
-                IconButton(iconSize: 50, onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => PoseDetectorView()),);
-                }, icon: Icon(Icons.camera)),
-                Container(
-                  width: 250,
-                  height: 200,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Text("설명설명설명설명설명설명"
-                        "설명설명설명설명설명dd설명"
-                        "설명설명설명설명설명설명설명설명"
-                        "설명설명설명설명설명설명설명설명설명설명설명설명"
-                        "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                        "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                        "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                        "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명""설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명""설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명""설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                        "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                        "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                        "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-                        "설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명"
-
-
-                    ),
-
-                  ),
-                )
-              ],
-            )
-        )
-      ],
-    );
-  }*/
   Widget build(BuildContext context){
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
