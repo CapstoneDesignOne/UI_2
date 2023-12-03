@@ -36,15 +36,17 @@ class Score extends StatefulWidget {
   int minv = 0;
   int minidx = 0;
   int idx = 0;
-  List<int> ddd1=[0,0,0,0,0,0,0,0,];
+  List<int> stored_scores=[100,100,100,100,100,100,100,100,];
 
   void addScore (List<int> current) {
     // 포즈
-    ddd1 = current;
+    stored_scores = current;
+    //ddd1 = current;
     ddd = 0;
     minv = 200;
     minidx = 0;
     idx = 0;
+
     current.forEach((i) {
       ddd += i;
       minv = (i<minv) ? i:minv;
@@ -53,8 +55,13 @@ class Score extends StatefulWidget {
     });
 
 
-    score += (ddd>>3);
-    score = score>>1;
+
+    for(int i=0; i<8; ++i) {
+      //  stored_scores[i] = (stored_scores[i]+current[i])>>1;
+      //stored_scores[i] = current[i];
+    }
+
+
 
     if(counter%50==0) {
       if(isSetting) {
@@ -71,30 +78,6 @@ class Score extends StatefulWidget {
     else
       counter++;
     //isSpeak = false;
-
-    /*
-    if (counter2 % 30 == 0) {
-      score += (ddd >> 3);
-      score = score >> 1;
-      // 시간
-      if ((ddd >> 3) >= 80) {
-        time_score += 100;
-        time_score = time_score >> 1;
-      }
-      else if ((ddd >> 3) >= 60) {
-        time_score += 80;
-        time_score = time_score >> 1;
-      }
-      else {
-        time_score += 60;
-        time_score = time_score >> 1;
-      }
-      counter2 = 1;
-    }
-    else {
-      counter2++;
-    }
-    */
   }
 
   @override
@@ -172,7 +155,7 @@ class resultPageState extends State<resultPage> {
       },
       body: jsonEncode({//json 형식으로 보낼 데이터 입력
         'user_num' : '1',
-        'pose_score': '${ttmp.score}',
+        'pose_score': '${ttmp.stored_scores}',
         'time_score' : '${ttmp.time_score}',
       }),
     );

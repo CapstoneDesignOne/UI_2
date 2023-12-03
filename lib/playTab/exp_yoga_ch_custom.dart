@@ -63,6 +63,7 @@ class _exp_yoga_ch_customState extends State<exp_yoga_ch_custom> {
                         selectedPoseNumProvider.selectedImagesPose.clear();
                         selectedPoseNumProvider.selectedImages.clear();
                         selectedPoseNumProvider.selectedPoseNum.clear();
+                        selectedPoseNumProvider.selectedPoseNameSever.clear();
                         _currentDescription='';
                         widget.changeView(7);
                       },

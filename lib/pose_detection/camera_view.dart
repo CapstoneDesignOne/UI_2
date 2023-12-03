@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:intl/intl.dart';
 import 'package:cabston/RecordTab.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +14,17 @@ import 'package:porcupine_flutter/porcupine_error.dart';
 import 'package:porcupine_flutter/porcupine_manager.dart';
 import 'package:porcupine_flutter/porcupine.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-
+import  'package:provider/provider.dart'; // provider관련
+import 'package:cabston/selected_num.dart'; //provider 상태 관리 파일 자세 전송
 bool aaa = false;
+var start = DateTime.now();
+var end = DateTime.now();
 
 class CameraView extends StatefulWidget {
   CameraView(
       {Key? key,
+        required this.userData,
+        required this.initPose,
         required this.customPaint,
         required this.onImage,
         this.onCameraFeedReady,
@@ -32,6 +37,8 @@ class CameraView extends StatefulWidget {
   final Function(InputImage inputImage) onImage;
   final VoidCallback? onCameraFeedReady;
   final VoidCallback? onDetectorViewModeChanged;
+  final Function(String name) userData;
+  final Function() initPose;
   final Function(CameraLensDirection direction)? onCameraLensDirectionChanged;
   final CameraLensDirection initialCameraLensDirection;
   bool isStart = false;
@@ -56,9 +63,15 @@ class _CameraViewState extends State<CameraView> {
 
   RhinoManager? _rhinoManager;
   PorcupineManager? _porcupineManager;
+  List<String> pose_name = [];
+  /*자세 선택된거 넘어오는 부분*/
+  void poseNamefunction(BuildContext context) {
+    pose_name = context.read<selected_pose_num>().selectedPoseNameSever;
 
+  }
   //////////////Rhino 관련 함수///////////////
 
+  int cnt = 0;
   //음성을 인식하면 호출되는 함수
   void inferenceCallback(RhinoInference inference) {
 
@@ -70,12 +83,30 @@ class _CameraViewState extends State<CameraView> {
         if(intent=='start') {
           widget.isStart = true;
           aaa = true;
-          tts.speak("시작합니다.");
+          tts.speak("시작합니다");
+          start = DateTime.now();
+          widget.userData.call(pose_name[cnt]);
         }
         else if(intent=='stop') {
           widget.isStart = false;
           aaa = false;
           tts.speak("종료합니다.");
+          end = DateTime.now();
+          widget.initPose;
+        }
+        else if(intent=='time') {
+          if(aaa){
+            var NOW = DateTime.now();
+            int min = NOW.minute-start.minute;
+            int sec = NOW.second-start.second;
+            tts.speak("$min분 $sec초");
+          }
+        }
+        else if(intent=='next'){
+          if(aaa && cnt<pose_name.length){
+            tts.speak("${pose_name[++cnt]} 시작합니다.");
+            widget.userData.call(pose_name[cnt]);
+          }
         }
       });
     }
@@ -177,6 +208,7 @@ class _CameraViewState extends State<CameraView> {
 
   @override
   Widget build(BuildContext context) {
+    poseNamefunction(context);
     return Scaffold(body: _liveFeedBody());
   }
 
@@ -226,32 +258,31 @@ class _CameraViewState extends State<CameraView> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.ddd1[0]}'),
-                        Text('${ttmp.ddd1[1]}'),
+                        Text('${ttmp.stored_scores[0]}'),
+                        Text('${ttmp.stored_scores[1]}'),
                       ]
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.ddd1[2]}'),
-                        Text('${ttmp.ddd1[3]}'),
+                        Text('${ttmp.stored_scores[2]}'),
+                        Text('${ttmp.stored_scores[3]}'),
                       ]
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.ddd1[4]}'),
-                        Text('${ttmp.ddd1[5]}'),
+                        Text('${ttmp.stored_scores[4]}'),
+                        Text('${ttmp.stored_scores[5]}'),
                       ]
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.ddd1[6]}'),
-                        Text('${ttmp.ddd1[7]}'),
+                        Text('${ttmp.stored_scores[6]}'),
+                        Text('${ttmp.stored_scores[7]}'),
                       ]
                   ),
-
                 ]
             )
         ),
@@ -268,11 +299,11 @@ class _CameraViewState extends State<CameraView> {
         heroTag: Object(),
         onPressed: (){
           Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context)=>resultPage(aaa),),
+            context,
+            MaterialPageRoute(builder: (context)=>resultPage(aaa),),
           );
 
-          },
+        },
         backgroundColor: Colors.black54,
         child: Icon(
           Icons.arrow_back_ios_outlined,

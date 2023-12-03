@@ -8,6 +8,8 @@ enum DetectorViewMode { liveFeed, gallery }
 class DetectorView extends StatefulWidget {
   DetectorView({
     Key? key,
+    required this.userData,
+    required this.initPose,
     required this.title,
     required this.onImage,
     this.customPaint,
@@ -23,6 +25,8 @@ class DetectorView extends StatefulWidget {
   final CustomPaint? customPaint;
   final String? text;
   final DetectorViewMode initialDetectionMode;
+  final Function(String name) userData;
+  final Function() initPose;
   final Function(InputImage inputImage) onImage;
   final Function()? onCameraFeedReady;
   final Function(DetectorViewMode mode)? onDetectorViewModeChanged;
@@ -45,6 +49,8 @@ class _DetectorViewState extends State<DetectorView> {
   @override
   Widget build(BuildContext context) {
     return CameraView(
+      userData : widget.userData,
+      initPose : widget.initPose,
       customPaint: widget.customPaint,
       onImage: widget.onImage,
       onCameraFeedReady: widget.onCameraFeedReady,

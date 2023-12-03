@@ -109,7 +109,7 @@ class PosePainter extends CustomPainter {
     var b = -0.00047337167902949755;
     */
 
-
+    double radian = 180.0/pi;
 
     var angles_mean = [-0.77822538, -0.79229441 ,-0.87741574,-0.94663571 ,-0.04150215 , 0.01572251,
       -0.94498367 ,-0.97689872, -0.24132603];
@@ -150,34 +150,34 @@ class PosePainter extends CustomPainter {
         final PoseLandmark joint2 = pose.landmarks[type2]!;
         final PoseLandmark joint3 = pose.landmarks[type3]!;
 
-        //cos calculate
-        vm.Vector3 coord1 = vm.Vector3(joint1.x-joint3.x,
-            joint1.y-joint3.y,
-            joint1.z-joint3.z);
-        vm.Vector3 coord2 = vm.Vector3(joint2.x-joint3.x,joint2.y-joint3.y,joint2.z-joint3.z);
+        //double angle = 0;
 
-        // compute inner product
-        double angle = vm.dot3(coord1, coord2)/(coord1.length*coord2.length);
-        //angle-=standard;
+        double angle = atan2(joint1.x-joint3.x, joint1.y-joint3.y)-atan2(joint2.x-joint3.x, joint2.y-joint3.y);
+        angle *= radian;
+        angle = (0<angle) ? angle:-angle;
+        angle = (angle < 180) ? angle:360.0 - angle;
 
+        //double mean = (exellent_lower[index]+exellent_upper[index])/2.0;
+        //double tmp = (angle-normal_lower[index])/(mean-normal_lower[index])*100.0;
+        //tmp = 10;
+        //int kkkkk = 3;
+        //score[index] += tmp.ceil() ;
 
-        //angle calculate
-        /*
-        vm.Vector2 coord1 = vm.Vector2(joint1.x-joint3.x,
-            joint1.y-joint3.y);
-        vm.Vector2 coord2 = vm.Vector2(joint2.x-joint3.x,joint2.y-joint3.y);
-
-        // compute inner product
-        double angle = vm.degrees(atan2(coord1[0], coord1[1])-atan2(coord2[0], coord2[1]));
-        //angle-=standard;
-
-        angle = angle.abs();
-        if (angle > 180){
-          angle = 360.0 - angle;
+        double mean = (exellent_lower[index]+exellent_upper[index])/2.0;
+        if(angle>normal_upper[index] || normal_lower[index]>angle) {
+          score[index] = 10;
+        }
+        else if(mean<=angle) { // mean < angle < normal_upper
+          double tmp = (angle-mean)/(normal_upper[index]-mean)*40;
+          //if(100.0-tmp < 60) tmp = 40.0;
+          score[index] += 100-tmp.ceil();
+        }
+        else { // normal_lower < angle < mean
+          double tmp = (angle-normal_lower[index])/(mean-normal_lower[index])*40;
+          score[index] += tmp.ceil()+60;
         }
 
-         */
-
+        /*
         if (exellent_lower[index] <= angle && angle <= exellent_upper[index]) {
           score[index]+=100;
         }
@@ -188,8 +188,10 @@ class PosePainter extends CustomPainter {
           score[index]+=80;
         }
         else {
-          score[index]+=60;
+          score[index]+=40;
         }
+
+         */
       }
 
       void paintLine(
@@ -357,18 +359,9 @@ class PosePainter extends CustomPainter {
           PoseLandmarkType.leftAnkle,
           PoseLandmarkType.leftKnee,  7);
 
-      /*
-      if(score[0]>score[1])
-        score[1] = score[0];
-      else
-        score[0] = score[1];
-      */
       ttmp.addScore(score);
 
-      //sendData(rightArm_score);
-
       //Draw arms
-
       paintLine(
           PoseLandmarkType.leftShoulder, PoseLandmarkType.leftElbow,
           leftPaint);
