@@ -82,6 +82,7 @@ class _poseChoice_challengersState extends State<poseChoice_challengers> {
                                           Image.asset(selectedPoseNumProvider.selectedImages[i]),
                                           Text(
                                             selectedPoseNumProvider.selectedPoseName[int.parse(selectedPoses[i])],
+
                                             textAlign: TextAlign.center,
                                           ),
                                           ElevatedButton(

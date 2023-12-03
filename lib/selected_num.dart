@@ -120,8 +120,11 @@ class selected_pose_num with ChangeNotifier {
   List<int> _selectedPoseNum = []; // 포즈 선택된 index파악
   List<String> _selectedImages = []; // pose 버튼 주소
   List<String> _selectedImages_pose = []; // pose 사진 주소
+  List<String> _selectedPoseName_sever=[];
+
   // 외부에서 접근 할 수 있도록 getter 생성
   List<String> get selectedPoseName => _selectedPoseName;
+  List<String> get selectedPoseName_sever =>_selectedPoseName_sever;
   List<int> get selectedPoseNum => _selectedPoseNum;
   List<String> get selectedImages => _selectedImages;
   List<String> get selectedPoseExp => _selectedPoseExp;
@@ -132,17 +135,21 @@ class selected_pose_num with ChangeNotifier {
       _selectedPoseNum.add(index + 1);
       _selectedImages.add(imageAsset);
       _selectedImages_pose.add(imageAset2);
+      _selectedPoseName_sever.add(_selectedPoseName[index+1]);
       print('Selected Poses: $_selectedPoseNum');
       print('Selected Images: $_selectedImages');
       print('Selected Images1: $_selectedImages_pose');
+      print('selected name: $_selectedPoseName_sever');
       notifyListeners();
     }
+
   }
 
   void removeSelectedPose(int i) {
     _selectedPoseNum.removeAt(i);
     _selectedImages.removeAt(i);
     _selectedImages_pose.removeAt(i);
+    _selectedPoseName_sever.removeAt(i);
     notifyListeners();
   }
 
