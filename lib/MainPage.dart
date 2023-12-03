@@ -1,3 +1,4 @@
+import 'package:cabston/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cabston/playTab/PlayTab.dart';
@@ -35,18 +36,18 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin  
     super.initState();
   }
 
- /* void _updateAppBarTitle() {
+  void _updateAppBarTitle() {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy년 MM월 dd일').format(now);
     setState(() {
       appBarTitle = formattedDate;
     });
-  }*/
+  }
 
   void _handleTabSelection() {
     if (_tabController.index == 0) {
       setState(() {
-        appBarTitle = '요가를 차근차근 \n 배워봐요!';
+        appBarTitle = '운동 요일을 정하세요!';
       });
 
     } else if (_tabController.index == 1) {
@@ -96,10 +97,22 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin  
         ),
         actions: [
           Container(
-              color: Color(0xFFDEFFEF),
-              width: 50,
-              height: 10,
-              child: IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.keyboard_backspace,color: Colors.black,))
+            child: Transform.translate(
+              offset: Offset(-10,20), // Adjust these values to move the text upward and to the left
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                },
+                child: Text(
+                  '로그아웃',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    //decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
         elevation: 0,

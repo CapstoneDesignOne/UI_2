@@ -1,3 +1,4 @@
+import 'package:cabston/SignUpPage.dart';
 import 'package:cabston/selected_num.dart';
 import 'package:flutter/material.dart';
 import 'package:cabston/MainPage.dart';
@@ -115,6 +116,25 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
+              Container(
+                child: Transform.translate(
+                  offset: Offset(-120.0, -20.0), // Adjust these values to move the text upward and to the left
+                  child: GestureDetector(
+                    onTap: () {
+                      // 회원 가입 텍스트를 눌렀을 때 회원 가입 페이지로 이동
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+                    },
+                    child: Text(
+                      '회원 가입',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               ElevatedButton(
                 onPressed: () {
                   // 로그인 버튼을 눌렀을 때 Tab 페이지로 이동
@@ -123,8 +143,9 @@ class LoginPage extends StatelessWidget {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Color(0xFFB7F667)),
                 ),
-                child: Text('로그인'),
+                child: Text('로그인',style: TextStyle(color: Colors.black),),
               ),
+
             ],
           ),
         ),
