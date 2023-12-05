@@ -38,32 +38,44 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "회원가입 페이지"
-          ,
-      ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: _usernameController,
-                decoration: InputDecoration(labelText: '아이디'),
-              ),
-              SizedBox(height: 16.0),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(labelText: '패스워드'),
-              ),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text("가입하기"),
-              ),
-            ],
+        body: Container(
+          color: Color(0xFFDEFFEF),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    '회원가입',
+                    style: TextStyle(fontSize: 24,fontWeight: FontWeight.w600),
+                  ),
+                ),
+                TextField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(labelText: '아이디'),
+                ),
+                SizedBox(height: 16.0),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(labelText: '패스워드'),
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: _submitForm,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Color(0xFFB7F667)),
+                  ),
+                  child: Text(
+                      "가입하기",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
     );
