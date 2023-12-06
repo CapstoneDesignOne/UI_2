@@ -29,6 +29,10 @@ class _poseChoice_posePractiveState extends State<poseChoice_posePractive> {
                   IconButton(
                     iconSize: 25,
                     onPressed: () {
+                      selectedPoseNumProvider.selectedImagesPose.clear();
+                      selectedPoseNumProvider.selectedImages.clear();
+                      selectedPoseNumProvider.selectedPoseNum.clear();
+                      selectedPoseNumProvider.selectedPoseNameSever.clear();
                       widget.changeView(4); // 챌린져스 ->추천루틴,커스텀
                     },
                     icon: Icon(Icons.backspace_outlined),

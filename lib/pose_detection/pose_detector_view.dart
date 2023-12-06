@@ -34,14 +34,14 @@ class _PoseDetectorViewState extends State<PoseDetectorView> {
   bool pose_detect = true;
 
   void initPose() {
-    excellent_upper = [0];
-    excellent_lower = [0];
+    excellent_upper = [];
+    excellent_lower = [];
 
-    good_upper = [0];
-    good_lower = [0];
+    good_upper = [];
+    good_lower = [];
 
-    nomal_upper = [0];
-    nomal_lower = [0];
+    nomal_upper = [];
+    nomal_lower = [];
 
     pose_detect = false;
   }

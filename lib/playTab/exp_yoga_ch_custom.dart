@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cabston/user_info.dart';
 import 'package:cabston/playTab/PlayTab.dart';
 import 'package:cabston/pose_detection/pose_detector_view.dart';
 import 'package:http/http.dart' as http;
@@ -16,12 +17,12 @@ class exp_yoga_ch_custom extends StatefulWidget {
 }
 
 class _exp_yoga_ch_customState extends State<exp_yoga_ch_custom> {
-  final url = 'http://34.64.61.219:3000';//서버의 http 주소
-  TextEditingController name = TextEditingController();//textfield로 데이터 입력 받음.
-  TextEditingController age = TextEditingController();//textfield로 데이터 입력 받음.
-  TextEditingController married = TextEditingController();//textfield로 데이터 입력 받음.
-  String _statusMessage = '';//서버에 데이터를 보내고 상태를 저장할 변수
+  final url = 'http://34.64.61.219: 3000';//서버의 http 주소
+  List<String> pose_name_kr = ['오른쪽 팔꿈치', '왼쪽 팔꿈치', '오른쪽 겨드랑이', '왼쪽 겨드랑이', '오른쪽 고관절', '왼쪽 고관절', '오른쪽 무릎', '왼쪽 무릎'];
   String _currentDescription = '';
+  String _poseName = '';
+  String poseData ='';
+  String poseDataTemp ='';
   @override
   void didChangeDependencies(){
     super.didChangeDependencies();
@@ -29,16 +30,24 @@ class _exp_yoga_ch_customState extends State<exp_yoga_ch_custom> {
     final selectedPoseNumProvider = Provider.of<selected_pose_num>(context);
     if (selectedPoseNumProvider.selectedPoseNum.isNotEmpty) {
       _currentDescription = selectedPoseNumProvider.selectedPoseExp[selectedPoseNumProvider.selectedPoseNum.first-1];
+      poseDataTemp = selectedPoseNumProvider.selectedPoseNameSever[0];
     }
   }
+
   //서버에서 데이터를 받아온다.
-  Future<String> fetchData() async {
-    final response = await http.post(Uri.parse(url+'/data'));//서버에서 데이터를 받아온다.
+  Future<dynamic> fetchData(int user_num) async {
+    if(poseData == "") poseData = poseDataTemp;
+    final response = await http.post(
+      Uri.parse(url+'/pose_point/get_yoga_point'),
+      headers: {//보낼 데이터 형식(json)
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({//json 형식으로 보낼 데이터 입력
+        'user_num' : user_num,
+        'pose_name': poseData,
+      }),);
     if (response.statusCode == 200) {//200 = 정상적으로 연결 되었다.
-      //정상적으로 데이터를 전달받았다면 데이터를 json(dictionary 형)형식의 데이터를 받아온다.
-      var jsonData = json.decode(response.body);
-      //받아온 데이터 중 message에 해당하는 데이터를 반환한다.
-      return jsonData['message'];
+      return json.decode(response.body);
     } else {
       throw Exception('Failed to load data');
     }
@@ -89,16 +98,32 @@ class _exp_yoga_ch_customState extends State<exp_yoga_ch_custom> {
                   onPageChanged: (index) {
                     setState(() {
                       _currentDescription = selectedPoseNumProvider.selectedPoseExp[selectedPoseNumProvider.selectedPoseNum[index]-1];
+                      poseData = selectedPoseNumProvider.selectedPoseNameSever[index];
+                      print(poseData);
                     });
                   },
                 ),
               ),
-              FutureBuilder<String>(
+              FutureBuilder <dynamic>(
                 //비동기 처리(서버에서 데이터를 불러올 때까지 대기하며 보여줄 화면을 설정할 수 있다.)
-                future: fetchData(),//비동기 함수(서버 연결)
+                future: fetchData(context.watch<user_info>().user_num),//비동기 함수(서버 연결)
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {// 서버 연결 완료
-                    return Text(snapshot.data!); // 서버에서 받은 데이터 보여준다
+                    print(snapshot.data);
+                    int timeScore = snapshot.data!['time_score'];
+                    List<int> scores = (snapshot.data!['pose_score'] as List<dynamic>).cast<int>();
+                    String score_print = "";
+                    for(int i = 0; i<scores.length; i++){
+                      if(i%2==0){
+                        score_print += '\n';
+                      }
+                      score_print += '${pose_name_kr[i]} : ${scores[i]} ';
+                    }
+                    return Text(score_print,
+                      style: TextStyle(
+                        fontStyle: FontStyle.normal,
+                        fontSize: 15, // 여기에 원하는 글자 크기를 설정
+                      ),); // 서버에서 받은 데이터 보여준다
                   } else if (snapshot.hasError) { // 연결 중 오류 발생
                     return Text('${snapshot.error}');//오류 메세지
                   }

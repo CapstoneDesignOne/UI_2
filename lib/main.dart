@@ -1,5 +1,6 @@
 import 'package:cabston/SignUpPage.dart';
 import 'package:cabston/selected_num.dart';
+import 'package:cabston/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:cabston/MainPage.dart';
 import 'package:rhino_flutter/rhino.dart';
@@ -9,13 +10,23 @@ import 'package:porcupine_flutter/porcupine_error.dart';
 import 'package:porcupine_flutter/porcupine_manager.dart';
 import 'package:porcupine_flutter/porcupine.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+   tz.initializeTimeZones();
   runApp(
+      // 타임존 데이터 초기화
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => selected_pose_num()),
+        ChangeNotifierProvider(create: (context) => user_info()),
         // 다른 프로바이더들도 필요하다면 여기에 추가
       ],
       child: MyApp(),
@@ -28,14 +39,59 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return MaterialApp(
-      home: LoginPage()
+        home: LoginPage()
     );
   }
 }
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  //TextEditingController user_id = TextEditingController();
+  //TextEditingController password = TextEditingController();
 
+  /*Future<void> login (BuildContext context) async{
+    final response = await http.post(
+      Uri.parse('http://34.64.61.219:3000/login'),
+      headers: {//보낼 데이터 형식(json)
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({//json 형식으로 보낼 데이터 입력
+        'user_id' : user_id.text,
+        'password' : password.text
+      }),
+    );
+    if (response.statusCode == 200) {//200 = 정상적으로 연결 되었다.
+      bool isLogin = json.decode(response.body)['login']==1 ? true:false;
+      if(isLogin) {
+        int user_num = json.decode(response.body)['user_num'];
+        context.read<user_info>().login_user(user_num);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
+      }else{
+        failToLogin(context);
+      }
+    }
+  }*/
+
+  void failToLogin(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("로그인 실패"),
+          content: Text("아이디와 패스워드를 \n다시 확인해주세요"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("확인"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //const LoginPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +132,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 10), // 내부 여백 조절
                       child: TextField(
+                        //controller: user_id,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: '아이디를 입력하세요',
@@ -106,6 +163,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 10), // 내부 여백 조절
                       child: TextField(
+                        //controller: password,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: '비밀번호를 입력하세요',
@@ -136,10 +194,7 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
-                  // 로그인 버튼을 눌렀을 때 Tab 페이지로 이동
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
-                },
+                onPressed: () {/*login (context);*/Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));},
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Color(0xFFB7F667)),
                 ),
@@ -275,4 +330,3 @@ class WakeWord_AudioRecord extends State<MyApp1>{
     );
   }
 }
-

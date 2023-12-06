@@ -127,7 +127,7 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin  
             ),
             child: TabBar( // 상단 탭바 선언
               tabs: [ // 탭 종류
-                customTab('Yoga Calender'),
+                customTab('Calender'),
                 customTab('Record'),
                 customTab('Play')
               ],
@@ -170,6 +170,8 @@ class customTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        height: 40,
+        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
         child: Text(
           tabName,
           style: TextStyle(

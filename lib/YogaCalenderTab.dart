@@ -1,134 +1,164 @@
-import 'package:cabston/pose_detection/pose_detector_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:cabston/notification.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+
+int today() {
+  DateTime now = DateTime.now();
+  int dayOfWeek = now.weekday;
+  return dayOfWeek;
+}
 
 class YogaCalenderTab extends StatefulWidget {
-  const YogaCalenderTab({super.key});
+  const YogaCalenderTab({Key? key}) : super(key: key);
+
   @override
   State<YogaCalenderTab> createState() => _YogaCalenderTabState();
 }
 
-class _YogaCalenderTabState extends State<YogaCalenderTab> {
+class _YogaCalenderTabState extends State<YogaCalenderTab> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  final NotificationService notificationService = NotificationService();
+
+  List<bool> selectedDays = [false, false, false, false, false, false, false];
+  bool isNotificationEnabled = false;
+  TimeOfDay selectedTime = TimeOfDay.now();
+
+  @override
+  void initState() {
+    super.initState();
+    tz.initializeTimeZones(); // tz 패키지 초기화
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: Padding(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 50,
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        margin:EdgeInsets.fromLTRB(0, 50, 0, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              color: Colors.white,
+              height: 50,
+              width: 100,
+              child: Text(
+                '요일 선택',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        //margin: EdgeInsets.fromLTRB(0, 0, 220, 0),
-                        decoration: BoxDecoration(
-                          color: Color(0xff00BA89),
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-                          child: Text(
-                            '요일을 정하세요!',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              height: 100,
+              width: 600,
+              color: Colors.white,
+              child:Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(7, (index) {
+                  return Container(
+                    alignment: Alignment.center,
+                    width: 40,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          selectedDays[index] = !selectedDays[index];
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: selectedDays[index] ? Colors.blue : Colors.grey,
+                        //minimumSize: Size(20, 20), // 최소 크기 지정
                       ),
-                      Container(
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Color(0xff00BA89),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10),
-                          ),
-                        ),
-                        child : Container(
-                          width: 300,
-                          height: 100,
-                          color: Colors.white,
-                          child: Center(
-                            child: Text(
-                              '상위 0.1%',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 28,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                      child: Text(getDayName(index)),
+                    ),
+                  );
+                }),
               ),
-              SizedBox(
-                height: 100,
+            ),
+            SizedBox(height: 20),
+            Container(
+              alignment: Alignment.center,
+              height: 50,
+              width: 100,
+              color:Colors.white,
+              child: Text(
+                '시간 설정',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        //margin: EdgeInsets.fromLTRB(0, 0, 220, 0),
-                        decoration: BoxDecoration(
-                          color: Color(0xff00BA89),
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5,horizontal: 10),
-                          child: Text(
-                            '알림을 설정하세요',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Color(0xff00BA89),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10),
-                          ),
-                        ),
-                        child : Container(
-                          width: 300,
-                          height: 200,
-                          color: Colors.white,
-                          child: Center(
-                            child: Text(
-                              '자세점수: 20점 \n 시간점수: 40점 \n 획득한 메달 수: 2개 \n 총 점수: 100점',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 28,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final TimeOfDay? pickedTime = await showTimePicker(
+                  context: context,
+                  initialTime: selectedTime,
+                );
+
+                if (pickedTime != null && pickedTime != selectedTime) {
+                  setState(() {
+                    selectedTime = pickedTime;
+                    isNotificationEnabled=true;
+                    for (int i = 0; i < 7; i++) {
+                      if (selectedDays[i] && ((today() - 1) == i)) {
+                        notificationService.scheduleNotification(selectedTime.hour , selectedTime.minute);
+                      }
+                    }
+                  });
+                }
+              },
+                child: Text(
+                  '${selectedTime?.hour}:${selectedTime?.minute}',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+            ),
+            Container(
+              child: Text(
+                '${selectedTime?.hour}:${selectedTime?.minute}',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ],
-          )
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              //알림 설정 버튼
+              onPressed: () {
+                setState(() {
+                  isNotificationEnabled = !isNotificationEnabled;
+                });
+                if (isNotificationEnabled) {
+                  notificationService.scheduleNotification(selectedTime.hour , selectedTime.minute-1);
+                } else {
+                  notificationService.cancelAllNotifications();
+                  print("알림 끄기");
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                primary: isNotificationEnabled ? Colors.blue : Colors.grey,
+              ),
+              child: Text(
+                isNotificationEnabled ? '켜기 ' : '끄기',
+                style: TextStyle(
+                  color: Colors.white, // 텍스트 색상을 흰색으로 설정
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  String getDayName(int dayIndex) {
+    List<String> days = ['월', '화', '수', '목', '금', '토', '일'];
+    return days[dayIndex];
   }
 }
