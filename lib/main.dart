@@ -1,4 +1,5 @@
 import 'package:cabston/SignUpPage.dart';
+import 'package:cabston/notification.dart';
 import 'package:cabston/selected_num.dart';
 import 'package:cabston/user_info.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +20,14 @@ import 'package:timezone/data/latest.dart' as tz;
 
 
 void main() async {
+  // final notificationService = NotificationService();
+  // await notificationService.init();
   WidgetsFlutterBinding.ensureInitialized();
-   tz.initializeTimeZones();
+  // 타임존 초기화
+  tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('Asia/Seoul')); // 예시로 서울 타임존 설정
+  //print(DateTime.now());
   runApp(
-      // 타임존 데이터 초기화
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => selected_pose_num()),

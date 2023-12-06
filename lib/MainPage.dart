@@ -31,7 +31,7 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin  
       length: 3,
       vsync: this,
     );
-   // _updateAppBarTitle(); // 초기 App Bar 문구 설정
+    _updateAppBarTitle(); // 초기 App Bar 문구 설정
     _tabController.addListener(_handleTabSelection); // 탭 변경 시 호출할 콜백 함수 등록
     super.initState();
   }

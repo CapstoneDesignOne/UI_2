@@ -13,7 +13,6 @@ class NotificationService {
 
   factory NotificationService() {
     return _instance;
-
   }
   // private 생성자
   NotificationService._();
@@ -31,9 +30,7 @@ class NotificationService {
     // 로컬 푸시 알림을 초기화
 // 로컬 푸시 알림을 초기화
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    // 타임존 초기화
-    tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('Asia/Seoul')); // 예시로 서울 타임존 설정
+
 
   }
   // 푸시 알림 생성
@@ -74,11 +71,16 @@ class NotificationService {
       now.month,
       now.day,
       hour,
-      minute,
+      minute
     );
+    print("---현재 시간과 예약된 시간이 일치하는지 확인-");
 
+    print(tz.TZDateTime.from(
+      tz.TZDateTime.now(tz.local),
+      tz.local,
+    ));
     print(scheduledDate);
-    print("zz");
+    print("---");
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
     AndroidNotificationDetails(
       'your_channel_id',
@@ -87,10 +89,12 @@ class NotificationService {
       'your_channel_description',
       importance: Importance.max,
       priority: Priority.high,
+      //channelShowBadge: true,
     );
-    //print("hi");
+
     const NotificationDetails notificationDetails =
     NotificationDetails(android: androidPlatformChannelSpecifics);
+
     await FlutterLocalNotificationsPlugin().zonedSchedule(
       0, // 알림 ID
       '사용자님',
