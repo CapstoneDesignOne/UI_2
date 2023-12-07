@@ -97,8 +97,8 @@ class NotificationService {
 
     await FlutterLocalNotificationsPlugin().zonedSchedule(
       0, // 알림 ID
-      '사용자님',
-      '운동하세요!',
+      'Yobis',
+      '오늘은 요가 하는 날이에요!',
       tz.TZDateTime.from(scheduledDate, tz.local),
       notificationDetails,
       payload: 'your_payload',

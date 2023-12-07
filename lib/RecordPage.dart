@@ -70,7 +70,7 @@ class Score extends StatefulWidget {
 
 
 
-    if(counter%80==0) {
+    if(counter%100==0) {
       if(isSetting) {
         tts.setLanguage('ko');
         tts.setSpeechRate(0.5);
@@ -156,7 +156,7 @@ class resultPageState extends State<resultPage> {
                               title : Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                      '${user_info.poseNames[index]} : ${user_info.posePoints[index]} 점',
+                                      '${user_info.poseNames[index]} : ${(user_info.posePoints[index]).toStringAsFixed(2)} 점',
                                       style: TextStyle(fontFamily: 'Da',fontSize: 25, fontWeight: FontWeight.bold)
                                   )
                               )
