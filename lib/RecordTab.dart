@@ -133,7 +133,7 @@ class RecordTab extends StatelessWidget {
                                   color: Colors.white,
                                   child: Center(
                                     child: Text(
-                                      '평균 점수: ${snapshot.data['user_rank']!=null?snapshot.data['total_score']/snapshot.data['yoga_num']:0}점 \n '
+                                      '평균 점수: ${(snapshot.data['user_rank']!=null?snapshot.data['total_score']/snapshot.data['yoga_num']:0).toStringAsFixed(2)}점 \n '
                                           '수행한 요가 수: ${snapshot.data['user_rank']!=null?snapshot.data['yoga_num']:0}개'
                                           '\n 총 점수: ${snapshot.data['user_rank']!=null? snapshot.data['total_score']:0}점',
                                       style: TextStyle(

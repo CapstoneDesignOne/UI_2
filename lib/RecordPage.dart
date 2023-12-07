@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:cabston/user_info.dart';
 import 'package:http/http.dart' as http;
@@ -118,37 +119,65 @@ class resultPageState extends State<resultPage> {
     return Consumer<user_info>(builder: (context, user_info, child){
       return MaterialApp(
         home: Scaffold(
-          appBar: AppBar(title: Text('당신의 점수를 확인하세요!')),
+          backgroundColor: Color(0xFFDEFFEF),
           body: Center(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children : [
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: user_info.poseNames.length,
-                      itemBuilder:(BuildContext context, int index){
-                        return ListTile(
-                            title : Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                    '${user_info.poseNames[index]} : ${user_info.posePoints[index]} 점',
-                                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)
-                                )
-                            )
-                        );
-                      }),
+                  ClipOval(
+                    child: Image.asset(
+                      'assets/logo.png',
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Container(
+                    child: Text(
+                        '당신의 점수를 확인하세요!',
+                      style: TextStyle(
+                        fontFamily: 'Da',
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Container(
+                    width: 400,
+                    height: 230,
+                    color: Colors.white,
+                    child:ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: user_info.poseNames.length,
+                        itemBuilder:(BuildContext context, int index){
+                          return ListTile(
+                              title : Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                      '${user_info.poseNames[index]} : ${user_info.posePoints[index]} 점',
+                                      style: TextStyle(fontFamily: 'Da',fontSize: 25, fontWeight: FontWeight.bold)
+                                  )
+                              )
+                          );
+                        }),
+                  ),
+                  SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.pop(context);
                       Navigator.pop(context);
                       user_info.poseNames.clear();
                       user_info.posePoints.clear();
-                    },//함수 수행
-                    child: Text('돌아가기',
-                      style: TextStyle(
-                        fontSize: 30,
-                      ),
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.transparent), // 버튼 배경투명
+                      elevation: MaterialStateProperty.all(0), // 그림자 없애기
+                      //fixedSize: MaterialStateProperty.all(Size(150, 50)), // 버튼 크기 지정
+                    ),
+                    child: Image.asset(
+                      'assets/BackButton.png',
                     ),
                   ),
                 ]),

@@ -1,5 +1,4 @@
 import 'package:cabston/SignUpPage.dart';
-import 'package:cabston/notification.dart';
 import 'package:cabston/selected_num.dart';
 import 'package:cabston/user_info.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +15,21 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 
 
 
 void main() async {
-  // final notificationService = NotificationService();
-  // await notificationService.init();
   WidgetsFlutterBinding.ensureInitialized();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+  const AndroidInitializationSettings initializationSettingsAndroid =
+  AndroidInitializationSettings('@mipmap/ic_launcher'); // 앱 아이콘 사용
+  final InitializationSettings initializationSettings =
+  InitializationSettings(android: initializationSettingsAndroid);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   // 타임존 초기화
   tz.initializeTimeZones();
   tz.setLocalLocation(tz.getLocation('Asia/Seoul')); // 예시로 서울 타임존 설정
@@ -44,16 +51,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return MaterialApp(
+        theme: ThemeData(
+          fontFamily: 'Da', /** 여기가 핵심 **/
+          primarySwatch: Colors.blue,
+        ),
         home: LoginPage()
     );
   }
 }
 
 class LoginPage extends StatelessWidget {
-  //TextEditingController user_id = TextEditingController();
-  //TextEditingController password = TextEditingController();
+  TextEditingController user_id = TextEditingController();
+  TextEditingController password = TextEditingController();
 
-  /*Future<void> login (BuildContext context) async{
+  Future<void> login (BuildContext context) async{
     final response = await http.post(
       Uri.parse('http://34.64.61.219:3000/login'),
       headers: {//보낼 데이터 형식(json)
@@ -74,7 +85,7 @@ class LoginPage extends StatelessWidget {
         failToLogin(context);
       }
     }
-  }*/
+  }
 
   void failToLogin(BuildContext context) {
     showDialog(
@@ -108,12 +119,20 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/login/Lotus.png'),
+              ClipOval(
+                child: Image.asset(
+                  'assets/logo.png',
+                  width: 170,
+                  height: 170,
+                ),
+              ),
+              SizedBox(height: 20),
               Text(
-                'Yobis',
+                '오늘 즐거운 요가를 해보세요',
                 style: TextStyle(
-                  fontSize: 70,
-                  fontWeight: FontWeight.bold,
+                  //fontFamily: 'NanumPenScriptRegular',
+                  fontSize: 22,
+                  fontWeight: FontWeight.w100,
                 ),
               ),
               SizedBox(height: 10),
@@ -127,7 +146,8 @@ class LoginPage extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       'ID',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(//fontFamily: 'NanumPenScriptRegular',
+                         fontSize: 15, fontWeight: FontWeight.bold),
                     ), // 레이블
                     Container(
                       decoration: BoxDecoration(
@@ -137,12 +157,12 @@ class LoginPage extends StatelessWidget {
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 10), // 내부 여백 조절
                       child: TextField(
-                        //controller: user_id,
+                        controller: user_id,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: '아이디를 입력하세요',
                         ),
-                        style: TextStyle(color: Colors.black), // 입력 텍스트 색상
+                        style: TextStyle(fontSize: 15,color: Colors.black,), // 입력 텍스트 색상
                       ),
                     ),
                   ],
@@ -158,7 +178,7 @@ class LoginPage extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       'PassWord',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ), // 레이블
                     Container(
                       decoration: BoxDecoration(
@@ -168,12 +188,12 @@ class LoginPage extends StatelessWidget {
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 10), // 내부 여백 조절
                       child: TextField(
-                        //controller: password,
+                        controller: password,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: '비밀번호를 입력하세요',
                         ),
-                        style: TextStyle(color: Colors.black), // 입력 텍스트 색상
+                        style: TextStyle(fontSize: 15,color: Colors.black,), // 입력 텍스트 색상
                       ),
                     ),
                   ],
@@ -190,7 +210,7 @@ class LoginPage extends StatelessWidget {
                     child: Text(
                       '회원 가입',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 15,
                         color: Colors.black,
                         decoration: TextDecoration.underline,
                       ),
@@ -199,11 +219,11 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {/*login (context);*/Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));},
+                onPressed: () {login (context);},
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Color(0xFFB7F667)),
                 ),
-                child: Text('로그인',style: TextStyle(color: Colors.black),),
+                child: Text('login',style: TextStyle(color: Colors.black),),
               ),
 
             ],

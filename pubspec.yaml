@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.17.0
-
+  flutter_spinkit: ^5.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -62,6 +62,8 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   timezone: ^0.9.2
 
+
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -69,6 +71,8 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
+    - assets/logo.png
+    - assets/BackButton.png
     - assets/chellen/custom_button.png
     - assets/chellen/recomand_button.png
     - assets/chellen/chellen_button.png
@@ -128,6 +132,19 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  fonts:
+    - family: WhisperReqular
+      fonts:
+        - asset: assets/font/Whisper-Regular.ttf
+
+    - family: NanumPenScriptRegular
+      fonts:
+        - asset: assets/font/NanumPenScript-Regular.ttf
+
+    - family: Da
+      fonts:
+        - asset: assets/font/Diphylleia-Regular.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

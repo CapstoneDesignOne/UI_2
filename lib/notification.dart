@@ -67,11 +67,11 @@ class NotificationService {
   Future<void> scheduleNotification(int hour, int minute) async {
     tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     final DateTime scheduledDate = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      hour,
-      minute
+        now.year,
+        now.month,
+        now.day,
+        hour,
+        minute
     );
     print("---현재 시간과 예약된 시간이 일치하는지 확인-");
 

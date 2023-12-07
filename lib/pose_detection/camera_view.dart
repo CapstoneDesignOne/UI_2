@@ -96,8 +96,7 @@ class _CameraViewState extends State<CameraView> {
     }
   }
 
-  Future<void> sendPoint(double avg_score) async {
-    print("여기 실행이 안되는듯");
+  Future<void> sendPoint(double avg_score, String yoga_name ) async {
     try{
       await http.post(
         Uri.parse('http://34.64.61.219:3000/rank/update_totalscore'),
@@ -106,7 +105,8 @@ class _CameraViewState extends State<CameraView> {
         },
         body: jsonEncode({//json 형식으로 보낼 데이터 입력
           'user_num' : user_num,
-          'total_score' : avg_score
+          'total_score' : avg_score,
+          'pose_name' : yoga_name
         }),
       );
     }catch(e){
@@ -118,6 +118,7 @@ class _CameraViewState extends State<CameraView> {
   //////////////Rhino 관련 함수///////////////
 
   int cnt = 0;
+  bool isshowing = false;
   //음성을 인식하면 호출되는 함수
   void inferenceCallback(RhinoInference inference) {
     if(inference.isUnderstood!){
@@ -130,7 +131,7 @@ class _CameraViewState extends State<CameraView> {
       }
       avg_score /= ttmp.stored_scores.length;
       setState(() {
-        if(intent=='start') {
+        if(intent=='start' && !aaa) {
           widget.isStart = true;
           aaa = true;
           tts.speak("${pose_name[cnt]} 시작합니다");
@@ -142,7 +143,7 @@ class _CameraViewState extends State<CameraView> {
           end = DateTime.now();
           if(aaa) {
             _porcupineManager!.delete();
-            sendPoint(avg_score);
+            sendPoint(avg_score, pose_name[cnt]);
             sendData(pose_name[cnt]);
             temp_context!.read<user_info>().user_point(pose_name[cnt], avg_score);
             widget.isStart = false;
@@ -157,6 +158,7 @@ class _CameraViewState extends State<CameraView> {
         }
         else if(intent=='time') {
           if(aaa){
+            Navigator.of(context).pop();
             var NOW = DateTime.now();
             int min = NOW.minute-start.minute;
             int sec = NOW.second-start.second;
@@ -166,7 +168,7 @@ class _CameraViewState extends State<CameraView> {
         else if(intent=='next'){
           if(aaa && cnt<pose_name.length-1){
             temp_context!.read<user_info>().user_point(pose_name[cnt], avg_score);
-            sendPoint(avg_score);
+            sendPoint(avg_score, pose_name[cnt]);
             sendData(pose_name[cnt]);
             tts.speak("${pose_name[++cnt]} 시작합니다.");
             ttmp.init_scores();
@@ -174,7 +176,7 @@ class _CameraViewState extends State<CameraView> {
           }else if(aaa){
             _porcupineManager!.delete();
             tts.speak("모든 자세가 종료되었습니다.");
-            sendPoint(avg_score);
+            sendPoint(avg_score, pose_name[cnt]);
             sendData(pose_name[cnt]);
             temp_context!.read<user_info>().user_point(pose_name[cnt], avg_score);
             widget.isStart = false;
@@ -186,9 +188,58 @@ class _CameraViewState extends State<CameraView> {
               MaterialPageRoute(builder: (context)=>resultPage(aaa),),
             );
           }
+        }else if(intent=='example') {
+          if(aaa){
+            showPose(context);
+            widget.initPose.call();
+            isshowing = true;
+          }
+        }
+        else if(intent=='restart') {
+          if(aaa && isshowing){
+            widget.userData.call(pose_name[cnt]);
+            Navigator.of(context).pop();
+            isshowing = false;
+          }
         }
       });
     }
+  }
+
+
+  //팝업창
+  void showPose(BuildContext context) {
+    List<String> name_num = ["다운독","측면널빤지자세","활자세","하이런지자세","연꽃자세","코브라자세","보트자세","어깨서기자세","쟁기자세","전사자세3","반달자세","선 전굴자세","전사자세2","나무자세","교각자세"];
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text("요가 이미지"),
+            content:  Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                    child: Image.asset('assets/pose/p_button_${name_num.indexOf(pose_name[cnt])+1}.png')
+                ),
+                Container(
+                    child :Text(pose_name[cnt])
+                )
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  widget.userData.call(pose_name[cnt]);
+                  Navigator.of(context).pop();
+                  isshowing = false;
+                },
+                child: Text("확인"),
+              ),
+            ],
+            contentPadding: EdgeInsets.all(1.0)
+        );
+      },
+    );
   }
 
   //Rhino 초기 세팅
@@ -240,9 +291,7 @@ class _CameraViewState extends State<CameraView> {
     tts.setPitch(1);
     if (keywordIndex >= 0) {
       tts.speak("네");
-      //ttmp.tts.stop();
       rhinoStart();
-      ttmp.tts.stop();
 
     }
   }
@@ -382,18 +431,21 @@ class _CameraViewState extends State<CameraView> {
         heroTag: Object(),
         onPressed: (){
           _porcupineManager!.delete();
+          if(aaa){
+            double avg_score = 0;
+            for(int i = 0; i<ttmp.stored_scores.length; i++){
+              avg_score+=ttmp.stored_scores[i];
+            }
+            avg_score /= ttmp.stored_scores.length;
 
-          double avg_score = 0;
-          for(int i = 0; i<ttmp.stored_scores.length; i++){
-            avg_score+=ttmp.stored_scores[i];
+            temp_context!.read<user_info>().user_point(pose_name[cnt], avg_score);
+            sendPoint(avg_score, pose_name[cnt]);
+            sendData(pose_name[cnt]);
+            widget.isStart = false;
+            aaa = false;
+            widget.initPose.call();
+            ttmp.init_scores();
           }
-          avg_score /= ttmp.stored_scores.length;
-          sendPoint(avg_score);
-          sendData(pose_name[cnt]);
-          widget.isStart = false;
-          aaa = false;
-          widget.initPose.call();
-          ttmp.init_scores();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context)=>resultPage(aaa),),

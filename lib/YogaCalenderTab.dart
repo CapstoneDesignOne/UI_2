@@ -2,7 +2,6 @@ import 'package:cabston/pose_detection/pose_detector_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cabston/notification.dart';
-import 'dart:async';
 import 'package:permission_handler/permission_handler.dart';
 
 int today() {
@@ -63,13 +62,6 @@ class _YogaCalenderTabState extends State<YogaCalenderTab>
     }
   }
 
-  void _onTimeChanged(TimeOfDay selectedTime) {
-    setState(() {
-      this.selectedTime = selectedTime;
-      // 알림 설정이 활성화된 상태에서만 알림 예약
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context); // AutomaticKeepAliveClientMixin 사용을 위한 호출
@@ -85,21 +77,21 @@ class _YogaCalenderTabState extends State<YogaCalenderTab>
               color: Colors.white,
               elevation: 2,
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Text(
-                  '운동하고 싶은 요일을 선택해보세요!',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  '운동할 요일을 선택해보세요!',
+                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 25),
             Card(
               color: Colors.white,
               elevation: 5,
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(7, (index) {
                     return Container(
                       width: 45,

@@ -20,8 +20,8 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin  
   late TabController _tabController;
   String appBarTitle = ''; // 날짜 문자열을 저장할 변수
   TextStyle appBarTitleStyle = TextStyle(
-    fontSize: 24, // 원하는 크기로 설정
-    fontWeight: FontWeight.bold, // 글씨체를 굵게 설정
+    fontSize: 20, // 원하는 크기로 설정
+    fontWeight: FontWeight.w600, // 글씨체를 굵게 설정
     color: Color(0xFF050000),
   );
 
@@ -106,7 +106,8 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin  
                 child: Text(
                   '로그아웃',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
                     color: Colors.black,
                     //decoration: TextDecoration.underline,
                   ),
@@ -170,12 +171,13 @@ class customTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 40,
-        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+        height: 35,
+        margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
         child: Text(
           tabName,
           style: TextStyle(
-            fontSize: 22, // 원하는 크기로 설정
+            fontFamily: 'WhisperReqular',
+            fontSize: 25, // 원하는 크기로 설정
             fontWeight: FontWeight.w600, // 글씨체를 굵게 설정
           ),
             textAlign: TextAlign.center,//글씨체 가운데 정렬
