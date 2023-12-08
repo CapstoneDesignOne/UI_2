@@ -32,7 +32,7 @@ class rutinChoice_posePractice extends StatelessWidget {
                     onTap: () {
                       changeViews(3);
                     },
-                    child: Image.asset('assets/chellen/level1_re.png'),
+                    child: Image.asset('assets/chellen/level1.png'),
                   ),
                   SizedBox(height: 30,),
                   InkWell(

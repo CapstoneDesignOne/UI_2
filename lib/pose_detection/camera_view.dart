@@ -390,29 +390,29 @@ class _CameraViewState extends State<CameraView> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.stored_scores[0]}'),
-                        Text('${ttmp.stored_scores[1]}'),
+                        Text('${ttmp.stored_scores[0]}', style: TextStyle(fontSize: 10),),
+                        Text('${ttmp.stored_scores[1]}',style: TextStyle(fontSize: 10),),
                       ]
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.stored_scores[2]}'),
-                        Text('${ttmp.stored_scores[3]}'),
+                        Text('${ttmp.stored_scores[2]}',style: TextStyle(fontSize: 10),),
+                        Text('${ttmp.stored_scores[3]}',style: TextStyle(fontSize: 10),),
                       ]
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.stored_scores[4]}'),
-                        Text('${ttmp.stored_scores[5]}'),
+                        Text('${ttmp.stored_scores[4]}',style: TextStyle(fontSize: 10),),
+                        Text('${ttmp.stored_scores[5]}',style: TextStyle(fontSize: 10),),
                       ]
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.stored_scores[6]}'),
-                        Text('${ttmp.stored_scores[7]}'),
+                        Text('${ttmp.stored_scores[6]}',style: TextStyle(fontSize: 10),),
+                        Text('${ttmp.stored_scores[7]}',style: TextStyle(fontSize: 10),),
                       ]
                   ),
                 ]

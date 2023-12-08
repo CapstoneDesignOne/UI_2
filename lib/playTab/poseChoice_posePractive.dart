@@ -33,14 +33,14 @@ class _poseChoice_posePractiveState extends State<poseChoice_posePractive> {
                       selectedPoseNumProvider.selectedImages.clear();
                       selectedPoseNumProvider.selectedPoseNum.clear();
                       selectedPoseNumProvider.selectedPoseNameSever.clear();
-                      widget.changeView(4); // 챌린져스 ->추천루틴,커스텀
+                      widget.changeView(4); // 자세연습 -> 추천루틴, 커스텀
                     },
                     icon: Icon(Icons.backspace_outlined),
                   ),
                 ],
               ),
               Image.asset(
-                'assets/chellen/ch_title.png',
+                'assets/chellen/pose_title.png',
               ),
               SizedBox(height: 50,),
               Column(
