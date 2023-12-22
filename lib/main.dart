@@ -41,6 +41,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => user_info()),
         // 다른 프로바이더들도 필요하다면 여기에 추가
       ],
+
       child: MyApp(),
     ),
   );
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: 'Da', /** 여기가 핵심 **/
           primarySwatch: Colors.blue,

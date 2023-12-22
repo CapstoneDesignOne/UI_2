@@ -138,7 +138,7 @@ class _CameraViewState extends State<CameraView> {
           start = DateTime.now();
           widget.userData.call(pose_name[cnt]);
         }
-        else if(intent=='stop' && aaa) {
+        else if(intent=='stop' && aaa && !isshowing) {
           tts.speak("종료합니다.");
           end = DateTime.now();
           if(aaa) {
@@ -158,14 +158,14 @@ class _CameraViewState extends State<CameraView> {
         }
         else if(intent=='time') {
           if(aaa){
-            Navigator.of(context).pop();
+            //Navigator.of(context).pop();
             var NOW = DateTime.now();
             int min = NOW.minute-start.minute;
             int sec = NOW.second-start.second;
             tts.speak("$min분 $sec초");
           }
         }
-        else if(intent=='next'){
+        else if(intent=='next' && !isshowing){
           if(aaa && cnt<pose_name.length-1){
             temp_context!.read<user_info>().user_point(pose_name[cnt], avg_score);
             sendPoint(avg_score, pose_name[cnt]);
@@ -205,7 +205,6 @@ class _CameraViewState extends State<CameraView> {
       });
     }
   }
-
 
   //팝업창
   void showPose(BuildContext context) {
@@ -292,7 +291,6 @@ class _CameraViewState extends State<CameraView> {
     if (keywordIndex >= 0) {
       tts.speak("네");
       rhinoStart();
-
     }
   }
   ////////////////////////////////
@@ -381,7 +379,7 @@ class _CameraViewState extends State<CameraView> {
       child: Transform.rotate(
         angle: pi/2,
         child: Container(
-            height:75.0,
+            height:80.0,
             width: 75.0,
             color: Colors.amber,
             child: Column(
@@ -390,29 +388,29 @@ class _CameraViewState extends State<CameraView> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.stored_scores[0]}', style: TextStyle(fontSize: 10),),
-                        Text('${ttmp.stored_scores[1]}',style: TextStyle(fontSize: 10),),
+                        Text('${ttmp.stored_scores[0]}'),
+                        Text('${ttmp.stored_scores[1]}'),
                       ]
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.stored_scores[2]}',style: TextStyle(fontSize: 10),),
-                        Text('${ttmp.stored_scores[3]}',style: TextStyle(fontSize: 10),),
+                        Text('${ttmp.stored_scores[2]}'),
+                        Text('${ttmp.stored_scores[3]}'),
                       ]
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.stored_scores[4]}',style: TextStyle(fontSize: 10),),
-                        Text('${ttmp.stored_scores[5]}',style: TextStyle(fontSize: 10),),
+                        Text('${ttmp.stored_scores[4]}'),
+                        Text('${ttmp.stored_scores[5]}'),
                       ]
                   ),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('${ttmp.stored_scores[6]}',style: TextStyle(fontSize: 10),),
-                        Text('${ttmp.stored_scores[7]}',style: TextStyle(fontSize: 10),),
+                        Text('${ttmp.stored_scores[6]}'),
+                        Text('${ttmp.stored_scores[7]}'),
                       ]
                   ),
                 ]
